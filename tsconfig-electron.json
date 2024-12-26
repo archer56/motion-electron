@@ -1,0 +1,18 @@
+{
+  "include": [
+    "./src/electron/**/*.ts"
+  ],
+  "compilerOptions": {
+    "outDir": "./dist/electron/",
+    "noImplicitAny": true,
+    "module": "Node16",
+    "allowJs": true,
+    "moduleResolution": "Node16",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop" : true,
+    "lib": [
+      "ES2018",
+      "DOM"
+    ]
+  }
+}
