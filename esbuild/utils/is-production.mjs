@@ -1,3 +1,3 @@
 export const isProduction = () => {
-  return process?.env?.ENV?.toLowerCase?.() === 'production';
+  return process?.env?.NODE_ENV?.toLowerCase?.() === 'production';
 };

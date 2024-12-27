@@ -7,9 +7,9 @@ import Path from 'path';
 
 const ctx = await esbuild.context({
   platform: 'node',
-  entryPoints: ['./src/electron/main.ts'],
-  bundle: true,
-  outfile: './dist/electron/main.js',
+  format: 'cjs',
+  entryPoints: ['./src/electron/**/*.ts'],
+  outdir:'./dist/electron',
   minify: isProduction(),
   sourcemap: !isProduction(),
   plugins: [rebuildNotifyPlugin(), startServerPlugin()],

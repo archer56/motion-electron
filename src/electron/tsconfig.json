@@ -1,6 +1,6 @@
 {
   "include": [
-    "./src/electron/**/*.ts"
+    "./**/*.ts"
   ],
   "compilerOptions": {
     "outDir": "./dist/electron/",
