@@ -3,11 +3,11 @@ import React from 'react';
 export const App = () => {
   const onMaximiseClick = () => {
     window.electronWindow.setFullscreen();
-  }
+  };
 
   const onMinimiseClick = () => {
     window.electronWindow.unsetFullscreen();
-  }
+  };
 
   return (
     <div>
@@ -15,5 +15,5 @@ export const App = () => {
       <button onClick={onMaximiseClick}>Maximise</button>
       <button onClick={onMinimiseClick}>minimise</button>
     </div>
-  )
-}
+  );
+};

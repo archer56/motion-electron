@@ -5,7 +5,7 @@ export const electronWindow = () => {
     setFullscreen: () => {
       return new Promise((resolve) => {
         ipcRenderer.send('set-fullscreen');
-        ipcRenderer.once('set-fullscreen-reply', (event) => {
+        ipcRenderer.once('set-fullscreen-reply', () => {
           resolve(true);
         });
       });
@@ -13,10 +13,10 @@ export const electronWindow = () => {
     unsetFullscreen: () => {
       return new Promise((resolve) => {
         ipcRenderer.send('unset-fullscreen');
-        ipcRenderer.once('unset-fullscreen-reply', (event) => {
+        ipcRenderer.once('unset-fullscreen-reply', () => {
           resolve(true);
         });
       });
-    }
+    },
   });
-}
+};

@@ -1,4 +1,5 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import type { BrowserWindow } from 'electron';
+import { ipcMain } from 'electron';
 
 export const electronWindow = (window: BrowserWindow) => {
   ipcMain.on('set-fullscreen', (event) => {
@@ -12,4 +13,4 @@ export const electronWindow = (window: BrowserWindow) => {
 
     event.sender.send('unset-fullscreen-reply');
   });
-}
+};

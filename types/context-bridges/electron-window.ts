@@ -1,4 +1,4 @@
 export type ElectronWindow = {
-  setFullscreen: () => Promise<boolean>
-  unsetFullscreen: () => Promise<boolean>
+  setFullscreen: () => Promise<boolean>;
+  unsetFullscreen: () => Promise<boolean>;
 };

@@ -9,7 +9,7 @@ const stopServer = () => {
 const startServer = () => {
   stopServer();
 
-  serverProcess = spawn('electron', ['.'], { stdio: 'inherit' });
+  serverProcess = spawn('npx', ['electron', '.'], { stdio: 'inherit' });
 
   serverProcess.on('close', (code) => {
     if (code !== 0) {
