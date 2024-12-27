@@ -1,5 +1,4 @@
 {
-  "include": ["./src/ui/**/*.ts", "./src/ui/**/*.d.ts"],
   "compilerOptions": {
     "jsx": "react",
     "target": "es2016",

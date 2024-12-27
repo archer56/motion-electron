@@ -6,9 +6,9 @@ import { rebuildNotifyPlugin } from './utils/rebuild-notify-plugin.mjs';
 
 const ctx = await esbuild.context({
   platform: 'browser',
-  entryPoints: ['./src/ui/index.tsx', './src/ui/ui.types.d.ts'],
+  entryPoints: ['./src/ui/index.tsx'],
   bundle: true,
-  outfile: './dist/ui/index.js',
+  outdir: './dist/ui',
   minify: isProduction(),
   sourcemap: !isProduction(),
   plugins: [
