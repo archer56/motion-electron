@@ -1,22 +1,37 @@
 import { app, BrowserWindow } from 'electron';
-import Path from 'path';
 import * as controllers from './controllers';
+import Path from 'path';
 
-const createWindow = () => {
-  const mainWindow = new BrowserWindow({
+let mainWindow: BrowserWindow = null;
+
+const createWindow = (transparent = false) => {
+  mainWindow?.hide();
+
+  const newWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    transparent: transparent,
+    frame: !transparent,
+    simpleFullscreen: transparent,
     webPreferences: {
       preload: Path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
     },
   });
 
-  mainWindow.loadFile('index.html');
-  mainWindow.setMenu(null);
-  mainWindow.webContents.openDevTools();
+  newWindow.loadFile('index.html');
+  newWindow.setMenu(null);
+  // newWindow.webContents.openDevTools();
+  setTimeout(() => {
+    // fix bug when opening vlc
+    newWindow.focus();
+  }, 100);
 
-  controllers.electronWindow(mainWindow);
+  mainWindow?.close();
+
+  mainWindow = newWindow;
+
+  return mainWindow;
 };
 
 app.on('window-all-closed', () => {
@@ -24,7 +39,20 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  createWindow();
+  // createWindow();
+  const window = createWindow(false); // initially non-transparent
+
+  controllers.electronWindow(window);
+  controllers.vlc(window, createWindow);
+
+  // Example: after 5 seconds, recreate window as transparent
+  // setTimeout(() => {
+  //   if (mainWindow) {
+  //     mainWindow.close(); // close existing window
+  //   }
+
+  //   createWindow(true); // create new transparent window
+  // }, 2000);
 });
 
 app.on('activate', () => {

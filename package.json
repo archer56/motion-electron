@@ -5,6 +5,7 @@
   "description": "Motion desktop app",
   "main": "./dist/electron/main.js",
   "scripts": {
+    "build-vlc": "node-gyp configure build",
     "dev:server": "cross-env NODE_ENV=development node ./esbuild/server.config.mjs",
     "dev:ui": "cross-env NODE_ENV=development node ./esbuild/ui.config.mjs",
     "lint": "eslint"
@@ -27,7 +28,9 @@
     "prettier": "3.4.2",
     "ts-node": "10.0.0",
     "typescript": "5.4.5",
-    "typescript-eslint": "8.18.2"
+    "typescript-eslint": "8.18.2",
+    "node-addon-api": "8.4.0",
+    "node-gyp": "11.2.0"
   },
   "keywords": [],
   "author": {
