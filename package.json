@@ -25,12 +25,13 @@
     "eslint-plugin-prettier": "5.2.1",
     "eslint-plugin-react": "7.37.3",
     "globals": "15.9.0",
+    "node-addon-api": "8.4.0",
+    "node-gyp": "11.2.0",
     "prettier": "3.4.2",
+    "tree-kill": "^1.2.2",
     "ts-node": "10.0.0",
     "typescript": "5.4.5",
-    "typescript-eslint": "8.18.2",
-    "node-addon-api": "8.4.0",
-    "node-gyp": "11.2.0"
+    "typescript-eslint": "8.18.2"
   },
   "keywords": [],
   "author": {

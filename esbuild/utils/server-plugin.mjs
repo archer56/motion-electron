@@ -1,21 +1,32 @@
 import { spawn } from 'child_process';
+import kill from 'tree-kill';
 
 let serverProcess = null;
 
 const stopServer = () => {
-  if (serverProcess) serverProcess.kill();
+  if (!serverProcess) {
+    return;
+  }
+
+  kill(serverProcess.pid, 'SIGTERM', (err) => {
+    if (err) {
+      console.error('Failed to kill process:', err);
+    }
+  });
 };
 
 const startServer = () => {
   stopServer();
 
-  serverProcess = spawn('npx', ['electron', '.'], { stdio: 'inherit' });
+  const isWindows = process.platform === 'win32';
 
-  serverProcess.on('close', (code) => {
-    if (code !== 0) {
-      console.log(`Server process exited with code ${code}`);
-    }
-  });
+  if (isWindows) {
+    serverProcess = spawn('cmd.exe', ['/c', 'npx electron .'], {
+      shell: true,
+    });
+  } else {
+    serverProcess = spawn('npx', ['electron', '.'], { stdio: 'inherit', shell: true });
+  }
 };
 
 export const startServerPlugin = () => ({
