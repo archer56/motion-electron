@@ -39,20 +39,10 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  // createWindow();
-  const window = createWindow(false); // initially non-transparent
+  const window = createWindow(false);
 
   controllers.electronWindow(window);
   controllers.vlc(window, createWindow);
-
-  // Example: after 5 seconds, recreate window as transparent
-  // setTimeout(() => {
-  //   if (mainWindow) {
-  //     mainWindow.close(); // close existing window
-  //   }
-
-  //   createWindow(true); // create new transparent window
-  // }, 2000);
 });
 
 app.on('activate', () => {

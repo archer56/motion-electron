@@ -22,6 +22,7 @@ const startServer = () => {
 
   if (isWindows) {
     serverProcess = spawn('cmd.exe', ['/c', 'npx electron .'], {
+      stdio: 'inherit',
       shell: true,
     });
   } else {

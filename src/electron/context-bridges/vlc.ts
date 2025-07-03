@@ -3,7 +3,6 @@ import { contextBridge, ipcRenderer } from 'electron';
 const createConnection = (key: string) => {
   return () => {
     return new Promise((resolve) => {
-      console.log('hiiiiiiiiiii bridge');
       ipcRenderer.send(`vlc-${key}`);
       ipcRenderer.once(`vlc-${key}-reply`, () => {
         resolve(true);

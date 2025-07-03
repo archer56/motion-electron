@@ -5,7 +5,8 @@
   "description": "Motion desktop app",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build-vlc": "node-gyp configure build",
+    "build-vlc:mac": "node-gyp configure build",
+    "build-vlc:windows": "node-gyp configure build --msvs_version=2022 --arch=x64",
     "dev:server": "cross-env NODE_ENV=development node ./esbuild/server.config.mjs",
     "dev:ui": "cross-env NODE_ENV=development node ./esbuild/ui.config.mjs",
     "lint": "eslint"
