@@ -1,8 +1,9 @@
 import type { BrowserWindow } from 'electron';
 import { ipcMain } from 'electron';
 import Vlc from '../../../build/Release/vlc_addon.node';
+import type { CreateWindow } from '../utils/create-window';
 
-export const vlc = (window: BrowserWindow, createWindow: () => BrowserWindow) => {
+export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event) => {
     try {
       Vlc.open('http://192.168.1.56:3000/playback/movies/329');
@@ -10,7 +11,7 @@ export const vlc = (window: BrowserWindow, createWindow: () => BrowserWindow) =>
       console.error('unable to open vlc', e);
     }
 
-    const win = createWindow(true);
+    const win = createWindow({ transparent: true });
     win.setSimpleFullScreen(true);
 
     event.sender.send('vlc-open-reply');
@@ -23,7 +24,7 @@ export const vlc = (window: BrowserWindow, createWindow: () => BrowserWindow) =>
       Vlc.close();
     } catch {}
 
-    createWindow(false);
+    createWindow({ transparent: false });
 
     event.sender.send('vlc-close-reply');
   });
