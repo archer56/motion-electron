@@ -24,7 +24,7 @@ export const createWindow: CreateWindow = (options) => {
 
   newWindow.loadFile('index.html');
   newWindow.setMenu(null);
-  newWindow.webContents.openDevTools();
+  // newWindow.webContents.openDevTools();
 
   setTimeout(() => {
     // fix bug when opening vlc

@@ -115,11 +115,85 @@ Napi::Value Pause(const Napi::CallbackInfo& info) {
   return info.Env().Undefined();
 }
 
+Napi::Value SeekTo(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (info.Length() < 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Time in milliseconds expected").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  if (g_vlcPlayer) {
+    int64_t timeMs = info[0].As<Napi::Number>().Int64Value();
+    libvlc_media_player_set_time(g_vlcPlayer, static_cast<libvlc_time_t>(timeMs));
+  }
+
+  return env.Undefined();
+}
+
+Napi::Value GetTimeState(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return env.Null();
+  }
+
+  libvlc_time_t current = libvlc_media_player_get_time(g_vlcPlayer);
+  libvlc_time_t total = libvlc_media_player_get_length(g_vlcPlayer);
+  float position = libvlc_media_player_get_position(g_vlcPlayer);
+
+  // Calculate remaining time
+  libvlc_time_t remaining = (total > 0 && current >= 0) ? (total - current) : -1;
+
+  // Create JS object to return
+  Napi::Object status = Napi::Object::New(env);
+  status.Set("current", Napi::Number::New(env, current));
+  status.Set("total", Napi::Number::New(env, total));
+  status.Set("remaining", Napi::Number::New(env, remaining));
+  status.Set("position", Napi::Number::New(env, position));
+
+  return status;
+}
+
+Napi::Value GetPlaybackState(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return Napi::String::New(env, "none");
+  }
+
+  libvlc_media_t* media = libvlc_media_player_get_media(g_vlcPlayer);
+  if (!media) {
+    return Napi::String::New(env, "none");
+  }
+
+  libvlc_state_t state = libvlc_media_get_state(media);
+
+  const char* stateStr = "unknown";
+
+  switch (state) {
+    case libvlc_NothingSpecial: stateStr = "idle"; break;
+    case libvlc_Opening:        stateStr = "opening"; break;
+    case libvlc_Buffering:      stateStr = "buffering"; break;
+    case libvlc_Playing:        stateStr = "playing"; break;
+    case libvlc_Paused:         stateStr = "paused"; break;
+    case libvlc_Stopped:        stateStr = "stopped"; break;
+    case libvlc_Ended:          stateStr = "ended"; break;
+    case libvlc_Error:          stateStr = "error"; break;
+  }
+
+  return Napi::String::New(env, stateStr);
+}
+
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   exports.Set("open", Napi::Function::New(env, Open));
   exports.Set("close", Napi::Function::New(env, Close));
   exports.Set("play", Napi::Function::New(env, Play));
   exports.Set("pause", Napi::Function::New(env, Pause));
+  exports.Set("seekTo", Napi::Function::New(env, SeekTo));
+  exports.Set("getTimeState", Napi::Function::New(env, GetTimeState));
+  exports.Set("getPlaybackState", Napi::Function::New(env, GetPlaybackState));
+  
   return exports;
 }
 

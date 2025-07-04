@@ -15,17 +15,23 @@ const ctx = await esbuild.context({
   minify: isProduction(),
   sourcemap: !isProduction(),
   plugins: [
-    isWindows()
-      ? copyFilesPlugin([
-          {
-            from: './libvlc/plugins',
-            to: './build/Release/plugins',
-          },
-        ])
-      : null,
+    copyFilesPlugin(
+      [
+        isWindows()
+          ? {
+              from: './libvlc/plugins',
+              to: './build/Release/plugins',
+            }
+          : null,
+        {
+          from: './vlc/vlc_addon.node.d.ts',
+          to: './build/Release/vlc_addon.node.d.ts',
+        },
+      ].filter((plugin) => plugin),
+    ),
     rebuildNotifyPlugin(),
     startServerPlugin(),
-  ].filter((plugin) => plugin),
+  ],
   tsconfig: Path.resolve('./src/electron/tsconfig.json'),
 });
 

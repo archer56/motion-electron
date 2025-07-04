@@ -1,11 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
-const createConnection = (key: string) => {
-  return () => {
+const createConnection = <Params>(key: string) => {
+  return (params: Params) => {
     return new Promise((resolve) => {
-      ipcRenderer.send(`vlc-${key}`);
-      ipcRenderer.once(`vlc-${key}-reply`, () => {
-        resolve(true);
+      ipcRenderer.send(`vlc-${key}`, params);
+      ipcRenderer.once(`vlc-${key}-reply`, (_, args) => {
+        resolve(args);
       });
     });
   };
@@ -17,5 +17,7 @@ export const vlc = () => {
     close: createConnection('close'),
     play: createConnection('play'),
     pause: createConnection('pause'),
+    seek: createConnection('seek'),
+    timeState: createConnection<number>('timestate'),
   });
 };

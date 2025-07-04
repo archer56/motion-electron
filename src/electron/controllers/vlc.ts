@@ -1,7 +1,10 @@
 import type { BrowserWindow } from 'electron';
 import { ipcMain } from 'electron';
-import Vlc from '../../../build/Release/vlc_addon.node';
+import vlcAddon from '../../../build/Release/vlc_addon.node';
+import type { VlcAddon } from '../../../types/vlc-addon';
 import type { CreateWindow } from '../utils/create-window';
+
+const Vlc = vlcAddon as VlcAddon;
 
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event) => {
@@ -39,5 +42,21 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
     Vlc.pause();
 
     event.sender.send('vlc-pause-reply');
+  });
+
+  ipcMain.on('vlc-seek', (event, seekMs: number) => {
+    Vlc.seekTo(seekMs);
+
+    event.sender.send('vlc-seek-reply');
+  });
+
+  ipcMain.on('vlc-timestate', async (event) => {
+    console.log('hiiiiii timestate');
+    try {
+      const timeState = await Vlc.getTimeState();
+      event.sender.send('vlc-timestate-reply', timeState);
+    } catch {
+      event.sender.send('vlc-timestate-reply', {});
+    }
   });
 };
