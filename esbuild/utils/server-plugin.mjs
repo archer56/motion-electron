@@ -1,5 +1,6 @@
 import { spawn } from 'child_process';
 import kill from 'tree-kill';
+import { isWindows } from './is-windows.mjs';
 
 let serverProcess = null;
 
@@ -18,9 +19,7 @@ const stopServer = () => {
 const startServer = () => {
   stopServer();
 
-  const isWindows = process.platform === 'win32';
-
-  if (isWindows) {
+  if (isWindows()) {
     serverProcess = spawn('cmd.exe', ['/c', 'npx electron .'], {
       stdio: 'inherit',
       shell: true,
