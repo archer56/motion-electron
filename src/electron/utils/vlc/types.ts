@@ -9,9 +9,20 @@ type PlaybackState = 'idle' | 'opening' | 'buffering' | 'playing' | 'paused' | '
 
 export type VlcAddon = {
   /**
+   * Initialises VLC - this should be called early as possible as it can be slow on windows
+   */
+  initialise: () => Promise<void>;
+
+  /**
    * Opens a VLC window in fullscreen and plays the content
    */
   open: (url: string) => Promise<void>;
+
+  /**
+   * @windowsOnly
+   * Forces the VLC window to reposition directly under the electron window
+   */
+  updateWindowPosition: (electronWindowHandle: bigint) => Promise<void>;
 
   /**
    * Closes the VLC window

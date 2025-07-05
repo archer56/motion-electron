@@ -23,10 +23,6 @@ const ctx = await esbuild.context({
               to: './build/Release/plugins',
             }
           : null,
-        {
-          from: './vlc/vlc_addon.node.d.ts',
-          to: './build/Release/vlc_addon.node.d.ts',
-        },
       ].filter((plugin) => plugin),
     ),
     rebuildNotifyPlugin(),

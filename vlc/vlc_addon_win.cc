@@ -88,19 +88,77 @@ Napi::Value Uninitialise(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "VLC playback and window shut down");
 }
 
-Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
+// Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
+//   Napi::Env env = info.Env();
   
-  if(g_vlcWindow) {
-    SetWindowPos(
-        g_vlcWindow,
-        HWND_BOTTOM,  // <-- Always stay behind Electron
-        0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
-        SWP_NOACTIVATE | SWP_SHOWWINDOW
-    );
-  }
+//   if(g_vlcWindow) {
+//     // SetWindowPos(
+//     //     g_vlcWindow,
+//     //     HWND_BOTTOM,  // <-- Always stay behind Electron
+//     //     0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+//     //     SWP_NOACTIVATE | SWP_SHOWWINDOW
+//     // );
+//     SetWindowPos(
+//         g_vlcWindow,
+//         HWND_NOTOPMOST,  // not HWND_BOTTOM
+//         0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+//         SWP_NOACTIVATE | SWP_SHOWWINDOW
+//     );
+//   }
 
-  return Napi::String::New(env, "Initializing VLC asynchronously...");
+//   return Napi::String::New(env, "Initializing VLC asynchronously...");
+// }
+
+Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+
+    if (!g_vlcWindow) {
+        // Napi::Error::New(env, "VLC window not created").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    if (info.Length() < 1) {
+        Napi::TypeError::New(env, "Expected one argument (Electron HWND)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    // Electron passes HWND as Number or BigInt depending on arch
+    // Try BigInt first (64-bit), then fallback to Number (32-bit)
+    HWND electronHwnd = nullptr;
+
+    if (info[0].IsBigInt()) {
+        bool lossless = false;
+        uint64_t val = info[0].As<Napi::BigInt>().Uint64Value(&lossless);
+        electronHwnd = reinterpret_cast<HWND>(val);
+    } else if (info[0].IsNumber()) {
+        uintptr_t val = static_cast<uintptr_t>(info[0].As<Napi::Number>().Int64Value());
+        electronHwnd = reinterpret_cast<HWND>(val);
+    } else {
+        Napi::TypeError::New(env, "Argument must be a BigInt or Number representing HWND").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    // Set VLC window to be just below Electron window in z-order,
+    // without activating or changing size/position here.
+    // Adjust position and size to cover full screen or match Electron if desired.
+
+    // Example: place VLC window right behind Electron window in z-order
+    BOOL res = SetWindowPos(
+        g_vlcWindow,
+        electronHwnd,    // place just below Electron window
+        0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+        SWP_NOACTIVATE | SWP_SHOWWINDOW | SWP_NOMOVE | SWP_NOSIZE
+    );
+
+    if (!res) {
+        DWORD err = GetLastError();
+        char msg[256];
+        sprintf_s(msg, "SetWindowPos failed with error %lu", err);
+        Napi::Error::New(env, msg).ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    return Napi::String::New(env, "VLC window position updated");
 }
 
 Napi::Value Open(const Napi::CallbackInfo& info) {

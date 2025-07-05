@@ -1,5 +1,6 @@
 import { BrowserWindow } from 'electron';
 import Path from 'path';
+import Vlc from './vlc';
 
 let mainWindow: BrowserWindow = null;
 
@@ -26,9 +27,21 @@ export const createWindow: CreateWindow = (options) => {
   newWindow.setMenu(null);
   // newWindow.webContents.openDevTools();
 
+  if (process.platform === 'win32') {
+    newWindow.on('focus', () => {
+      console.log('UPDATE WINDOW POS');
+      const hwndBuffer = newWindow.getNativeWindowHandle();
+      const hwnd = hwndBuffer.readBigUInt64LE(0);
+
+      Vlc.updateWindowPosition(hwnd);
+    });
+  }
+
   setTimeout(() => {
     // fix bug when opening vlc
-    newWindow.focus();
+    try {
+      newWindow?.focus?.();
+    } catch {}
   }, 100);
 
   mainWindow?.close();
