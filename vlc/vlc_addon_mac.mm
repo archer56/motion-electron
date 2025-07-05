@@ -141,10 +141,8 @@ Napi::Value GetTimeState(const Napi::CallbackInfo& info) {
   libvlc_time_t total = libvlc_media_player_get_length(g_vlcPlayer);
   float position = libvlc_media_player_get_position(g_vlcPlayer);
 
-  // Calculate remaining time
   libvlc_time_t remaining = (total > 0 && current >= 0) ? (total - current) : -1;
 
-  // Create JS object to return
   Napi::Object status = Napi::Object::New(env);
   status.Set("current", Napi::Number::New(env, current));
   status.Set("total", Napi::Number::New(env, total));

@@ -10,6 +10,7 @@ type PlaybackState = 'idle' | 'opening' | 'buffering' | 'playing' | 'paused' | '
 export type VlcAddon = {
   /**
    * Initialises VLC - this should be called early as possible as it can be slow on windows
+   * @windowsOnly
    */
   initialise: () => Promise<void>;
 
