@@ -1,10 +1,11 @@
 import { BrowserWindow } from 'electron';
 import Path from 'path';
 import Vlc from './vlc';
+import { isWindows } from './is-windows';
 
 let mainWindow: BrowserWindow = null;
 
-export type CreateWindow = (options?: { transparent?: boolean }) => BrowserWindow;
+export type CreateWindow = (options?: { transparent?: boolean; openDevTools?: boolean }) => BrowserWindow;
 
 export const createWindow: CreateWindow = (options) => {
   const { transparent = false } = options ?? {};
@@ -25,9 +26,11 @@ export const createWindow: CreateWindow = (options) => {
 
   newWindow.loadFile('index.html');
   newWindow.setMenu(null);
-  // newWindow.webContents.openDevTools();
+  if (options?.openDevTools) {
+    newWindow.webContents.openDevTools();
+  }
 
-  if (process.platform === 'win32') {
+  if (isWindows()) {
     newWindow.on('focus', () => {
       console.log('UPDATE WINDOW POS');
       const hwndBuffer = newWindow.getNativeWindowHandle();

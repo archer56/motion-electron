@@ -9,7 +9,6 @@ libvlc_media_player_t* g_vlcPlayer = nullptr;
 NSWindow* g_vlcWindow = nil;
 NSView* g_vlcView = nil;
 
-
 Napi::Value Open(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
