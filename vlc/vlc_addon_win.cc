@@ -1,253 +1,183 @@
-// #include <napi.h>
-// #include <windows.h>
-// #include <vlc/vlc.h>
+#include <thread>
+#include <windows.h>
+#include <napi.h>
+#include <vlc/vlc.h>
 
-// // Globals
-// libvlc_instance_t* g_vlcInstance = nullptr;
-// libvlc_media_player_t* g_vlcPlayer = nullptr;
-// HWND g_vlcWindow = nullptr;
+HWND g_vlcWindow = nullptr;
+libvlc_instance_t* g_vlcInstance = nullptr;
+libvlc_media_player_t* g_vlcPlayer = nullptr;
 
-// // Forward declaration
-// LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+std::atomic<bool> g_vlcInitialising = false;
+std::atomic<bool> g_vlcInitialised = false;
 
-// HWND CreateVLCWindow(HINSTANCE hInstance) {
-//     // Register window class
-//     WNDCLASSW wc = {};
-//     wc.lpfnWndProc = WindowProc;
-//     wc.hInstance = hInstance;
-//     wc.lpszClassName = L"VLCAddonWindowClass";
-//     wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+  switch (uMsg) {
+    case WM_DESTROY:
+      PostQuitMessage(0);
+      return 0;
+  }
+  return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
 
-//     if (!RegisterClassW(&wc)) {
-//         MessageBoxW(nullptr, L"Failed to register window class", L"Error", MB_OK | MB_ICONERROR);
-//         return nullptr;
-//     }
+void InitVLCAsync(HWND hwnd) {
+  printf("Initialising VLC\n");
+  g_vlcInitialising = true;
 
-//     // Get work area
-//     RECT rc;
-//     if (!SystemParametersInfoW(SPI_GETWORKAREA, 0, &rc, 0)) {
-//         MessageBoxW(nullptr, L"Failed to get work area", L"Error", MB_OK | MB_ICONERROR);
-//         return nullptr;
-//     }
+  const char* vlc_args[] = { "--quiet" };
 
-//     HWND hwnd = CreateWindowExW(
-//         WS_EX_LAYERED | WS_EX_TOOLWINDOW,
-//         wc.lpszClassName,
-//         L"VLC Window",
-//         WS_POPUP,
-//         rc.left, rc.top,
-//         rc.right - rc.left,
-//         rc.bottom - rc.top,
-//         nullptr,
-//         nullptr,
-//         hInstance,
-//         nullptr
-//     );
+  g_vlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
+  if (!g_vlcInstance) return;
 
-//     if (!hwnd) {
-//         MessageBoxW(nullptr, L"Failed to create window", L"Error", MB_OK | MB_ICONERROR);
-//         return nullptr;
-//     }
+  g_vlcPlayer = libvlc_media_player_new(g_vlcInstance);
+  
+  g_vlcInitialising = false;
+  g_vlcInitialised = true;
+  printf("Initialising VLC Complete\n");
+}
 
-//     SetLayeredWindowAttributes(hwnd, 0, 255, LWA_ALPHA);
-//     ShowWindow(hwnd, SW_SHOW);
-//     UpdateWindow(hwnd);
+Napi::Value Initialise(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
 
-//     return hwnd;
-// }
+  if(g_vlcInitialised){
+    return Napi::String::New(env, "VLC is initialised");
+  }
 
-// LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-//     switch (uMsg) {
-//         case WM_DESTROY:
-//             PostQuitMessage(0);
-//             return 0;
-//         default:
-//             return DefWindowProcW(hwnd, uMsg, wParam, lParam);
-//     }
-// }
+  if(g_vlcInitialising){
+    return Napi::String::New(env, "VLC is initialising");
+  }
 
-// // N-API methods
+  // Offload VLC initialization to a background thread
+//   std::string url = "http://192.168.1.56:3000/playback/movies/329";
+  std::thread(InitVLCAsync, g_vlcWindow).detach();
 
-// Napi::Value Open(const Napi::CallbackInfo& info) {
-//   printf("Initialising VLC");
+  return Napi::String::New(env, "Initializing VLC asynchronously...");
+}
 
-//     Napi::Env env = info.Env();
-
-//     if (g_vlcWindow) {
-//         ShowWindow(g_vlcWindow, SW_SHOW);
-//         SetForegroundWindow(g_vlcWindow);
-//         return Napi::String::New(env, "VLC window already opened");
-//     }
-
-//     HINSTANCE hInstance = GetModuleHandle(nullptr);
-//     g_vlcWindow = CreateVLCWindow(hInstance);
-//     if (!g_vlcWindow) {
-//         Napi::TypeError::New(env, "Failed to create VLC window").ThrowAsJavaScriptException();
-//         return env.Null();
-//     }
-//     printf("*******************1");
+Napi::Value Uninitialise(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    printf("Uninitialising VLC\n");
     
-//     // VLC args
-//     const char* vlc_args[] = {
-//       "--no-video-title-show",
-//       "--quiet",
-//       "--verbose=2"
-//     };
-
-//     SetEnvironmentVariableA("VLC_PLUGIN_PATH", "C:/Users/benar/Workspace/motion-electron/libvlc");
-//     char buf[512];
-//     GetEnvironmentVariableA("VLC_PLUGIN_PATH", buf, sizeof(buf));
-//     printf("VLC_PLUGIN_PATH = %s\n", buf);
-    
-//     g_vlcInstance = libvlc_new(sizeof(vlc_args) / sizeof(vlc_args[0]), vlc_args);
-//     if (!g_vlcInstance) {
-//       Napi::TypeError::New(env, "Failed to create VLC instance").ThrowAsJavaScriptException();
-//       return env.Null();
-//     }
-    
-//     printf("*******************2");
-//     g_vlcPlayer = libvlc_media_player_new(g_vlcInstance);
-//     printf("*******************3");
-//     libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance,
-//       "http://192.168.1.56:3000/playback/movies/329");
-//     printf("*******************4");
-//     libvlc_media_player_set_media(g_vlcPlayer, media);
-//     printf("*******************5");
-//     libvlc_media_release(media);
-//     printf("*******************6");
-    
-//     // Set the video output window handle for VLC
-//     libvlc_media_player_set_hwnd(g_vlcPlayer, g_vlcWindow);
-//     printf("*******************6");
-    
-//     libvlc_media_player_play(g_vlcPlayer);
-//     printf("*******************7");
-
-//     return Napi::String::New(env, "VLC player started");
-// }
-
-// Napi::Value Close(const Napi::CallbackInfo& info) {
-//     Napi::Env env = info.Env();
-
-//     if (g_vlcPlayer) {
-//         libvlc_media_player_stop(g_vlcPlayer);
-//         libvlc_media_player_release(g_vlcPlayer);
-//         g_vlcPlayer = nullptr;
-//     }
-//     if (g_vlcInstance) {
-//         libvlc_release(g_vlcInstance);
-//         g_vlcInstance = nullptr;
-//     }
-//     if (g_vlcWindow) {
-//         DestroyWindow(g_vlcWindow);
-//         g_vlcWindow = nullptr;
-//     }
-
-//     return Napi::String::New(env, "VLC playback and window shut down");
-// }
-
-// Napi::Value Play(const Napi::CallbackInfo& info) {
-//     if (g_vlcPlayer) {
-//         libvlc_media_player_play(g_vlcPlayer);
-//     }
-//     return info.Env().Undefined();
-// }
-
-// Napi::Value Pause(const Napi::CallbackInfo& info) {
-//     if (g_vlcPlayer) {
-//         libvlc_media_player_set_pause(g_vlcPlayer, 1);
-//     }
-//     return info.Env().Undefined();
-// }
-
-// Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
-//     exports.Set("open", Napi::Function::New(env, Open));
-//     exports.Set("close", Napi::Function::New(env, Close));
-//     exports.Set("play", Napi::Function::New(env, Play));
-//     exports.Set("pause", Napi::Function::New(env, Pause));
-//     return exports;
-// }
-
-// NODE_API_MODULE(vlc_addon, InitAll)
-
-
-    #include <napi.h>
-    #include <vlc/vlc.h>
-    #include <thread>
-    #include <chrono>
-    #include <windows.h>
-
-    libvlc_instance_t* inst = nullptr;
-    libvlc_media_player_t* player = nullptr;
-
-    Napi::Value Play(const Napi::CallbackInfo& info) {
-        Napi::Env env = info.Env();
-        if (info.Length() < 1 || !info[0].IsString()) {
-            Napi::TypeError::New(env, "Expected URL string").ThrowAsJavaScriptException();
-            return env.Null();
-        }
-
-        std::string url = info[0].As<Napi::String>().Utf8Value();
-
-        if (!inst) {
-            inst = libvlc_new(0, nullptr);
-            if (!inst) {
-                Napi::Error::New(env, "Failed to create VLC instance").ThrowAsJavaScriptException();
-                return env.Null();
-            }
-        }
-
-        libvlc_media_t* media = libvlc_media_new_location(inst, url.c_str());
-        if (!media) {
-            Napi::Error::New(env, "Failed to create media").ThrowAsJavaScriptException();
-            return env.Null();
-        }
-
-        if (player) {
-            libvlc_media_player_stop(player);
-            libvlc_media_player_release(player);
-            player = nullptr;
-        }
-
-        player = libvlc_media_player_new_from_media(media);
-        libvlc_media_release(media);
-
-        if (!player) {
-            Napi::Error::New(env, "Failed to create media player").ThrowAsJavaScriptException();
-            return env.Null();
-        }
-
-        if (libvlc_media_player_play(player) != 0) {
-            libvlc_media_player_release(player);
-            player = nullptr;
-            Napi::Error::New(env, "Failed to play media").ThrowAsJavaScriptException();
-            return env.Null();
-        }
-
-        return Napi::String::New(env, "Playing");
+    if(g_vlcInitialising){
+        printf("Uninitialising VLC - VLC is currently initialising\n");
+        return Napi::String::New(env, "VLC is initialising");
     }
 
-    Napi::Value Stop(const Napi::CallbackInfo& info) {
-        Napi::Env env = info.Env();
+    if (g_vlcPlayer) {
+        printf("Uninitialising VLC - VLC Player\n");
+        libvlc_media_player_stop(g_vlcPlayer);
+        libvlc_media_player_release(g_vlcPlayer);
+        g_vlcPlayer = nullptr;
+    }
+    
+    if (g_vlcInstance) {
+        printf("Uninitialising VLC - VLC Instance\n");
+        libvlc_release(g_vlcInstance);
+        g_vlcInstance = nullptr;
+    }
+    
+    if (g_vlcWindow) {
+        printf("Uninitialising VLC - VLC Window\n");
+        DestroyWindow(g_vlcWindow);
+        g_vlcWindow = nullptr;
+    }
+    
+    printf("Uninitialising VLC Complete\n");
+    
+    g_vlcInitialised = false;
 
-        if (player) {
-            libvlc_media_player_stop(player);
-            libvlc_media_player_release(player);
-            player = nullptr;
-        }
+    return Napi::String::New(env, "VLC playback and window shut down");
+}
 
-        if (inst) {
-            libvlc_release(inst);
-            inst = nullptr;
-        }
+Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  
+  if(g_vlcWindow) {
+    SetWindowPos(
+        g_vlcWindow,
+        HWND_BOTTOM,  // <-- Always stay behind Electron
+        0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+        SWP_NOACTIVATE | SWP_SHOWWINDOW
+    );
+  }
 
-        return Napi::String::New(env, "Stopped");
+  return Napi::String::New(env, "Initializing VLC asynchronously...");
+}
+
+Napi::Value Open(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  printf("Opening VLC\n");
+  
+  if (!g_vlcInstance || !g_vlcPlayer) {
+    printf("Opening VLC - VLC not initialised\n");
+    Napi::Error::New(env, "VLC not initialised (this is often slow)").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+    
+    if (!g_vlcWindow) {
+    printf("Opening VLC - creating window\n");
+    // create Win32 window (same as before)
+    const char CLASS_NAME[] = "VLCWindowClass";
+    WNDCLASS wc = {};
+    wc.lpfnWndProc = DefWindowProc;
+    wc.hInstance = GetModuleHandle(nullptr);
+    wc.lpszClassName = CLASS_NAME;
+    RegisterClass(&wc);
+
+    // g_vlcWindow = CreateWindowEx(
+    //   0, CLASS_NAME, "VLC", WS_POPUP,
+    //   0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+    //   nullptr, nullptr, GetModuleHandle(nullptr), nullptr
+    // );
+    g_vlcWindow = CreateWindowEx(
+        WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE, // Hides from Alt+Tab and taskbar
+        CLASS_NAME, "VLC",
+        WS_POPUP, // No border or decorations
+        0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
+        nullptr, nullptr, GetModuleHandle(nullptr), nullptr
+    );
+
+    ShowWindow(g_vlcWindow, SW_SHOW);
+  }
+
+  libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, "http://192.168.1.56:3000/playback/movies/329");
+  libvlc_media_player_set_media(g_vlcPlayer, media);
+  libvlc_media_release(media);
+
+  libvlc_media_player_set_hwnd(g_vlcPlayer, g_vlcWindow);
+  libvlc_media_player_play(g_vlcPlayer);
+
+  printf("Opening VLC Complete\n");
+
+  return Napi::String::New(env, "Initializing VLC asynchronously...");
+}
+
+Napi::Value Close(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
+    printf("Closing VLC\n");
+    
+    if (g_vlcPlayer) {
+        printf("Closing VLC - VLC Player\n");
+        libvlc_media_player_stop(g_vlcPlayer);
+    }
+        
+    if (g_vlcWindow) {
+        printf("Closing VLC - VLC Window\n");
+        DestroyWindow(g_vlcWindow);
+        g_vlcWindow = nullptr;
     }
 
-    Napi::Object Init(Napi::Env env, Napi::Object exports) {
-        exports.Set("open", Napi::Function::New(env, Play));
-        exports.Set("close", Napi::Function::New(env, Stop));
-        return exports;
-    }
+    printf("Closing VLC Complete\n");
 
-    NODE_API_MODULE(vlc_addon, Init)
+    return Napi::String::New(env, "VLC playback and window shut down");
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+    exports.Set("initialise", Napi::Function::New(env, Initialise));
+    exports.Set("uninitialise", Napi::Function::New(env, Uninitialise));
+    exports.Set("updateWindowPosition", Napi::Function::New(env, UpdateWindowPosition));
+    exports.Set("open", Napi::Function::New(env, Open));
+    exports.Set("close", Napi::Function::New(env, Close));
+    return exports;
+}
+
+NODE_API_MODULE(vlc_addon, Init)
