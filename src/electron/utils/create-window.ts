@@ -2,6 +2,7 @@ import { BrowserWindow } from 'electron';
 import Path from 'path';
 import Vlc from './vlc';
 import { isWindows } from './is-windows';
+import { sessionStorage } from './session-storage';
 
 let mainWindow: BrowserWindow = null;
 
@@ -12,6 +13,8 @@ export const createWindow: CreateWindow = (options) => {
 
   mainWindow?.hide();
 
+  const lastKnownRoute = sessionStorage.get('lastKnownRoute');
+
   const newWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -21,6 +24,7 @@ export const createWindow: CreateWindow = (options) => {
     webPreferences: {
       preload: Path.join(__dirname, '../preload.js'),
       nodeIntegration: true,
+      additionalArguments: [`--last-known-route=${lastKnownRoute}`],
     },
   });
 
@@ -33,7 +37,6 @@ export const createWindow: CreateWindow = (options) => {
 
   if (isWindows()) {
     newWindow.on('focus', () => {
-      console.log('UPDATE WINDOW POS');
       const hwndBuffer = newWindow.getNativeWindowHandle();
       const hwnd = hwndBuffer.readBigUInt64LE(0);
 

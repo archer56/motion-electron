@@ -1,4 +1,4 @@
 import * as contextBridges from './context-bridges';
 
-contextBridges.electronWindow();
+contextBridges.lastKnownRoute();
 contextBridges.vlc();

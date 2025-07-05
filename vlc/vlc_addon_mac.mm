@@ -1,8 +1,8 @@
 #include <napi.h>
 #import <Cocoa/Cocoa.h>
 #include <vlc/vlc.h>
-#include <thread> // For std::this_thread::sleep_for
-#include <chrono> // For std::chrono::milliseconds
+#include <thread>
+#include <chrono>
 
 libvlc_instance_t* g_vlcInstance = nullptr;
 libvlc_media_player_t* g_vlcPlayer = nullptr;

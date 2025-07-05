@@ -14,8 +14,8 @@ app.on('ready', () => {
     openDevTools: true,
   });
 
-  controllers.electronWindow(window);
   controllers.vlc(window, createWindow);
+  controllers.lastKnownRoute();
 
   if (isWindows()) {
     Vlc.initialise();

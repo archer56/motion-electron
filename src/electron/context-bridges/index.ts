@@ -1,2 +1,2 @@
-export { electronWindow } from './electron-window';
+export { lastKnownRoute } from './last-known-route';
 export { vlc } from './vlc';

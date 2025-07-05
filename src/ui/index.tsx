@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app';
 import type { ElectronWindow } from '../../types/context-bridges/electron-window';
@@ -12,4 +12,8 @@ declare global {
   }
 }
 
-root.render(<App />);
+root.render(
+  <StrictMode>
+    <App />
+  </StrictMode>,
+);

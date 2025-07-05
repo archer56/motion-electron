@@ -47,7 +47,6 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   });
 
   ipcMain.on('vlc-timestate', async (event) => {
-    console.log('hiiiiii timestate');
     try {
       const timeState = await Vlc.getTimeState();
       event.sender.send('vlc-timestate-reply', timeState);

@@ -1,21 +1,16 @@
 import React from 'react';
-import { VideoPlayerOverlay } from './components/video-player-overlay/video-player-overlay';
+import { RouterProvider, createHashRouter } from 'react-router-dom';
+import { routes } from './routes';
+import { Layout } from './components/layout';
 
 export const App = () => {
-  const onMaximiseClick = () => {
-    window.electronWindow.setFullscreen();
-  };
+  const router = createHashRouter([
+    {
+      path: '/',
+      element: <Layout />,
+      children: routes,
+    },
+  ]);
 
-  const onMinimiseClick = () => {
-    window.electronWindow.unsetFullscreen();
-  };
-
-  return (
-    <div>
-      {/* <h1>react bitches</h1> */}
-      <button onClick={onMaximiseClick}>Maximise</button>
-      <button onClick={onMinimiseClick}>minimise</button>
-      <VideoPlayerOverlay />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 };
