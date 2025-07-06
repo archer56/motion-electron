@@ -3,7 +3,7 @@ import { ipcMain } from 'electron';
 import Vlc from '../utils/vlc';
 import type { CreateWindow } from '../utils/create-window';
 import { sessionStorage } from '../utils/session-storage';
-import type { OpenOptions } from '../../types/connections/vlc';
+import type { CloseOptions, OpenOptions } from '../../types/connections/vlc';
 
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event, options: OpenOptions) => {
@@ -19,11 +19,12 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
     event.sender.send('vlc-open-reply');
   });
 
-  ipcMain.on('vlc-close', (event) => {
+  ipcMain.on('vlc-close', (event, options: CloseOptions) => {
     try {
       Vlc.close();
     } catch {}
 
+    sessionStorage.set('lastKnownRoute', `/${options.assetType}/${options.id}`);
     createWindow({ transparent: false });
 
     event.sender.send('vlc-close-reply');

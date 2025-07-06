@@ -1,7 +1,11 @@
 import type { FC } from 'react';
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import type { AssetType } from '../../../types/motion';
 
 export const VideoPlayerOverlay: FC = () => {
+  const params = useParams();
+
   useEffect(() => {
     setInterval(() => {
       window.vlc.timeState().then((time) => {
@@ -30,7 +34,10 @@ export const VideoPlayerOverlay: FC = () => {
   const handleClose = () => {
     console.log('closing');
 
-    window.vlc.close();
+    window.vlc.close({
+      assetType: params.assetType as AssetType,
+      id: Number(params.id),
+    });
   };
 
   const handleSeek = async () => {

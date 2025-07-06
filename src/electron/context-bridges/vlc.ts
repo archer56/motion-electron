@@ -1,9 +1,9 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { OpenOptions, TimeState } from '../../types/connections/vlc';
+import type { CloseOptions, OpenOptions, TimeState } from '../../types/connections/vlc';
 
 type ExposedVlc = {
   open: (params: OpenOptions) => Promise<void>;
-  close: () => Promise<void>;
+  close: (params: CloseOptions) => Promise<void>;
   play: () => Promise<void>;
   pause: () => Promise<void>;
   seek: (seekMs: number) => Promise<void>;

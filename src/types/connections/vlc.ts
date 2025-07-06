@@ -5,6 +5,8 @@ export type OpenOptions = {
   id: number;
 };
 
+export type CloseOptions = OpenOptions;
+
 export type TimeState = {
   current: number;
   total: number;
