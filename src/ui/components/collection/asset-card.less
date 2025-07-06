@@ -1,0 +1,24 @@
+@poster-width: 150px;
+@poster-height: @poster-width * 1.5;
+
+.asset-card {
+  position: relative;
+  flex: 0 0 auto;
+  width: @poster-width;
+  height: @poster-height;
+  background: @color-grey8;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 10px;
+
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+.asset-card__image {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+}

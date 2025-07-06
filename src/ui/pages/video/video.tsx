@@ -7,6 +7,7 @@ import { BackButton } from '../../components/back-button/back-button';
 import { ProgressBar } from './component/progress-bar';
 import { PlayPauseButton } from './component/play-pause-button';
 import classNames from 'classnames';
+import { useFetchAsset } from '../../hooks/use-fetch-motion';
 
 export const VideoPage: FC = () => {
   const params = useParams();
@@ -20,6 +21,20 @@ export const VideoPage: FC = () => {
     total: 0,
   });
   const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
+
+  if (!params.assetType || !params.id) {
+    return (
+      <div className="video-player">
+        <BackButton />
+        <span>Something has gone wrong</span>
+      </div>
+    );
+  }
+
+  const asset = useFetchAsset({
+    id: params.id,
+    assetType: params.assetType as AssetType,
+  });
 
   const hideOverlay = () => {
     if (playbackStatus === 'paused') {
@@ -46,6 +61,8 @@ export const VideoPage: FC = () => {
     if (e.code === 'Space') {
       const isPaused = playbackStatus === 'paused';
       onPauseUpdate(isPaused ? false : true);
+    } else if (e.code === 'Escape') {
+      handleClose();
     }
   };
 
@@ -78,7 +95,6 @@ export const VideoPage: FC = () => {
   }, [overlayHidden, playbackStatus]);
 
   useEffect(() => {
-    console.log('usssse');
     if (playbackStatus === 'playing') {
       hideOverlay();
     } else if (playbackStatus === 'paused') {
@@ -92,8 +108,8 @@ export const VideoPage: FC = () => {
 
   const handleClose = () => {
     window.vlc.close({
-      assetType: params.assetType as AssetType,
       id: Number(params.id),
+      assetType: params.assetType as AssetType,
     });
   };
 
@@ -101,7 +117,7 @@ export const VideoPage: FC = () => {
     return (
       <div className="video-player">
         <BackButton />
-        <span>BUFFERING@</span>
+        <span>BUFFERING</span>
       </div>
     );
   }
@@ -134,6 +150,7 @@ export const VideoPage: FC = () => {
   return (
     <div className={videoPlayerClass}>
       <BackButton onClick={handleClose} />
+      <h1 className="video-player__title">{asset?.data?.asset?.title}</h1>
       <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
         <PlayPauseButton isPaused={playbackStatus === 'paused'} onPauseUpdate={onPauseUpdate} />
       </ProgressBar>
