@@ -3,6 +3,7 @@ import * as esbuild from 'esbuild';
 import { copyFilesPlugin } from './utils/copy-files-plugin.mjs';
 import { isProduction } from './utils/is-production.mjs';
 import { rebuildNotifyPlugin } from './utils/rebuild-notify-plugin.mjs';
+import { lessLoader } from 'esbuild-plugin-less';
 
 const ctx = await esbuild.context({
   platform: 'browser',
@@ -26,6 +27,7 @@ const ctx = await esbuild.context({
         to: './dist/ui/icons/icon-512x512.png',
       },
     ]),
+    lessLoader(),
     rebuildNotifyPlugin(),
   ],
 });
