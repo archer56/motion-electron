@@ -14,7 +14,7 @@ export const Layout: FC<PropsWithChildren> = () => {
   }, []);
 
   return (
-    <div>
+    <div className="layout">
       <Outlet />
     </div>
   );
