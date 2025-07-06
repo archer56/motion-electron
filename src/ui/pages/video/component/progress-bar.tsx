@@ -28,7 +28,6 @@ type CalculateProgressOptions = {
 
 const calculateProgress = (options: CalculateProgressOptions): number => {
   const percentage = options.position / 100;
-  console.log('🚀 ~ calculateProgress ~ percentage:', options.position, percentage, options.length);
   return Math.round(options.length * percentage);
 };
 
