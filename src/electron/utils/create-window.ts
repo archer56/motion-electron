@@ -31,9 +31,9 @@ export const createWindow: CreateWindow = (options) => {
   newWindow.loadFile('index.html');
   newWindow.setMenu(null);
 
-  if (options?.openDevTools) {
-    newWindow.webContents.openDevTools();
-  }
+  // if (options?.openDevTools) {
+  newWindow.webContents.openDevTools();
+  // }
 
   if (isWindows()) {
     newWindow.on('focus', () => {

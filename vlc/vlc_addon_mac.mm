@@ -12,6 +12,14 @@ NSView* g_vlcView = nil;
 Napi::Value Open(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
+    // Validate arguments
+  if (info.Length() < 1 || !info[0].IsString()) {
+    Napi::TypeError::New(env, "Expected a URL string as argument").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  std::string url = info[0].As<Napi::String>();
+
   @autoreleasepool {
     // Create window if it doesn't exist
     if (!g_vlcWindow) {
@@ -52,8 +60,7 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
     g_vlcPlayer = libvlc_media_player_new(g_vlcInstance);
 
     // Set media from URL
-    libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance,
-      "http://192.168.1.56:3000/playback/movies/329");
+    libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, url.c_str());
     libvlc_media_player_set_media(g_vlcPlayer, media);
     libvlc_media_release(media);
 

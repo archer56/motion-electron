@@ -13,3 +13,5 @@ export type TimeState = {
   remaining: number;
   position: number;
 };
+
+export type PlaybackState = 'idle' | 'opening' | 'buffering' | 'playing' | 'paused' | 'stopped' | 'ended' | 'error';

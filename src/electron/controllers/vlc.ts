@@ -9,6 +9,7 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event, options: OpenOptions) => {
     try {
       Vlc.open(`http://192.168.1.56:3000/playback/${options.assetType}/${options.id}`);
+
       sessionStorage.set('lastKnownRoute', `/${options.assetType}/video/${options.id}`);
       const win = createWindow({ transparent: true });
       win.setSimpleFullScreen(true);
@@ -54,6 +55,15 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
       event.sender.send('vlc-timestate-reply', timeState);
     } catch {
       event.sender.send('vlc-timestate-reply', {});
+    }
+  });
+
+  ipcMain.on('vlc-playback-state', async (event) => {
+    try {
+      const playbackState = await Vlc.getPlaybackState();
+      event.sender.send('vlc-playback-state-reply', playbackState);
+    } catch {
+      event.sender.send('vlc-playback-state-reply', {});
     }
   });
 };

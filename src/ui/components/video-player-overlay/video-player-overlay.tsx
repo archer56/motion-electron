@@ -1,18 +1,28 @@
 import type { FC } from 'react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import type { AssetType } from '../../../types/motion';
+import type { PlaybackState } from '../../../types/connections/vlc';
 
 export const VideoPlayerOverlay: FC = () => {
   const params = useParams();
+  const timestateRef = useRef<NodeJS.Timeout>(null);
+  const [playbackStatus, setPlaybackStatus] = useState<PlaybackState>('idle');
 
   useEffect(() => {
-    setInterval(() => {
-      window.vlc.timeState().then((time) => {
-        console.log('timestate', time);
+    timestateRef.current = setInterval(() => {
+      console.log('polling');
+      window.vlc.playbackState().then((status) => {
+        setPlaybackStatus(() => status);
       });
-    }, 1000);
-  });
+    }, 300);
+
+    return () => {
+      if (timestateRef?.current) {
+        clearInterval(timestateRef?.current);
+      }
+    };
+  }, []);
 
   const handlePlay = () => {
     window.vlc.play();
@@ -46,13 +56,24 @@ export const VideoPlayerOverlay: FC = () => {
     window.vlc.seek(timestate.current + 20000);
   };
 
+  if (playbackStatus === 'opening' || playbackStatus === 'buffering' || playbackStatus === 'idle') {
+    return <h1>BUFFERING</h1>;
+  }
+
+  if (playbackStatus === 'ended' || playbackStatus === 'error' || playbackStatus === 'stopped') {
+    handleClose();
+  }
+
   return (
     <div>
       video
       <button onClick={handleInit}>init!</button>
       <button onClick={handleClose}>close!</button>
-      <button onClick={handlePause}>Pause</button>
-      <button onClick={handlePlay}>Play</button>
+      {playbackStatus === 'playing' ? (
+        <button onClick={handlePause}>Pause</button>
+      ) : (
+        <button onClick={handlePlay}>Play</button>
+      )}
       <button onClick={handleSeek}>Seek</button>
     </div>
   );

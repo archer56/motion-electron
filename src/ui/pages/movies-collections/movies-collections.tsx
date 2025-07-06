@@ -7,7 +7,7 @@ export const MoviesCollectionsPage: FC = () => {
   const handlePlayMovie = () => {
     window.vlc.open({
       assetType: 'movies',
-      id: 329,
+      id: 87,
     });
   };
 

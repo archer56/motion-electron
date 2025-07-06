@@ -5,13 +5,14 @@ export const MoviesPage: FC = () => {
   const handlePlayMovie = () => {
     window.vlc.open({
       assetType: 'movies',
-      id: 329,
+      id: 87,
     });
   };
 
   return (
     <div>
-      <h1>movie!</h1>;<button onClick={handlePlayMovie}>Play Movie!</button>
+      <h1>movie 87</h1>
+      <button onClick={handlePlayMovie}>Play Movie!</button>
     </div>
   );
 };
