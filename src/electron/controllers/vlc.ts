@@ -2,11 +2,14 @@ import type { BrowserWindow } from 'electron';
 import { ipcMain } from 'electron';
 import Vlc from '../utils/vlc';
 import type { CreateWindow } from '../utils/create-window';
+import { sessionStorage } from '../utils/session-storage';
+import type { OpenOptions } from '../../types/connections/vlc';
 
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
-  ipcMain.on('vlc-open', (event) => {
+  ipcMain.on('vlc-open', (event, options: OpenOptions) => {
     try {
-      Vlc.open('http://192.168.1.56:3000/playback/movies/329');
+      Vlc.open(`http://192.168.1.56:3000/playback/${options.assetType}/${options.id}`);
+      sessionStorage.set('lastKnownRoute', `/${options.assetType}/video/${options.id}`);
       const win = createWindow({ transparent: true });
       win.setSimpleFullScreen(true);
     } catch (e) {
@@ -17,8 +20,6 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   });
 
   ipcMain.on('vlc-close', (event) => {
-    console.log('hiiiiiiiiiii controller');
-
     try {
       Vlc.close();
     } catch {}

@@ -5,7 +5,7 @@ import { MoviesCollectionsPage } from './pages/movies-collections/movies-collect
 import { SeriesCollectionsPage } from './pages/series-collections/series-collections';
 // import { SeriesPage } from './pages/series/series';
 // import { SettingsPage } from './pages/settings/settings';
-// import { VideoPage } from './pages/video/video';
+import { VideoPage } from './pages/video/video';
 // import { DownloadsPage } from './pages/downloads/downloads';
 
 export enum RouteUrls {
@@ -14,7 +14,7 @@ export enum RouteUrls {
   // MoviesPage = '/movies/:id',
   SeriesCollectionPage = '/series',
   // SeriesPage = '/series/:id',
-  // VideoPage = '/:assetType/video/:id',
+  VideoPage = '/:assetType/video/:id',
   // SettingsPage = '/settings',
   // DownloadsPage = '/downloads',
 }
@@ -25,7 +25,7 @@ export const routes = [
   // { path: RouteUrls.MoviesPage, element: <MoviesPage /> },
   { path: RouteUrls.SeriesCollectionPage, element: <SeriesCollectionsPage /> },
   // { path: RouteUrls.SeriesPage, element: <SeriesPage /> },
-  // { path: RouteUrls.VideoPage, element: <VideoPage /> },
+  { path: RouteUrls.VideoPage, element: <VideoPage /> },
   // { path: RouteUrls.SettingsPage, element: <SettingsPage /> },
   // { path: RouteUrls.DownloadsPage, element: <DownloadsPage /> },
   // { path: '*', element: <NotFoundPage /> },

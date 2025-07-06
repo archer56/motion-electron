@@ -21,7 +21,10 @@ export const VideoPlayerOverlay: FC = () => {
   const handleInit = () => {
     console.log('initing');
 
-    window.vlc.open();
+    window.vlc.open({
+      assetType: 'movies',
+      id: 123,
+    });
   };
 
   const handleClose = () => {
@@ -33,7 +36,6 @@ export const VideoPlayerOverlay: FC = () => {
   const handleSeek = async () => {
     console.log('seeking');
     const timestate = await window.vlc.timeState();
-
     window.vlc.seek(timestate.current + 20000);
   };
 

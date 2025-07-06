@@ -1,9 +1,4 @@
-type TimeState = {
-  current: number;
-  total: number;
-  remaining: number;
-  position: number;
-};
+import type { TimeState } from '../../../types/connections/vlc';
 
 type PlaybackState = 'idle' | 'opening' | 'buffering' | 'playing' | 'paused' | 'stopped' | 'ended' | 'error' | 'none';
 
