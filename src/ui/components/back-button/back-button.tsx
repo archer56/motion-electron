@@ -12,13 +12,19 @@ type BackButtonProps = {
 export const BackButton: FC<BackButtonProps> = (props) => {
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = async () => {
     if (props?.onClick) {
       props.onClick();
       return;
     }
 
-    navigate(-1);
+    const routes = await window.routeHistory.getRoutes();
+
+    if (routes.length > 1) {
+      const prevHistoryRoute = routes[routes.length - 2];
+      await window.routeHistory.popRoute();
+      navigate(prevHistoryRoute);
+    }
   };
 
   const className = classNames('back-button', props.className);

@@ -16,6 +16,7 @@ app.on('ready', () => {
 
   controllers.vlc(window, createWindow);
   controllers.lastKnownRoute();
+  controllers.routeHistory();
 
   if (isWindows()) {
     Vlc.initialise();

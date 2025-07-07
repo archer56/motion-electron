@@ -1,7 +1,8 @@
-type StorageKeys = 'lastKnownRoute';
+type StorageKeys = 'lastKnownRoute' | 'route-history';
 
 const storage: Record<StorageKeys, unknown> = {
-  lastKnownRoute: '/',
+  lastKnownRoute: '',
+  'route-history': ['/movies'],
 };
 
 const get = (key: StorageKeys) => {

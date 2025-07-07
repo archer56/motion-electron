@@ -1,6 +1,6 @@
 import React from 'react';
 import { MoviesCollectionsPage } from './pages/movies-collections/movies-collections';
-// import { Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { MoviesPage } from './pages/movies/movies';
 import { SeriesCollectionsPage } from './pages/series-collections/series-collections';
 import { SeriesPage } from './pages/series/series';
@@ -20,7 +20,7 @@ export enum RouteUrls {
 }
 
 export const routes = [
-  { index: true, element: <MoviesCollectionsPage /> },
+  { index: true, element: <Navigate to={RouteUrls.MoviesCollectionPage} /> },
   { path: RouteUrls.MoviesCollectionPage, element: <MoviesCollectionsPage /> },
   { path: RouteUrls.MoviesPage, element: <MoviesPage /> },
   { path: RouteUrls.SeriesCollectionPage, element: <SeriesCollectionsPage /> },
