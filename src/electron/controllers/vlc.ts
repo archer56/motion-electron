@@ -24,7 +24,6 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
     try {
       Vlc.close();
     } catch {}
-
     sessionStorage.set('lastKnownRoute', `/${options.assetType}/${options.id}`);
     createWindow({ transparent: false });
 

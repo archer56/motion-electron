@@ -1,0 +1,86 @@
+@import './components/year.less';
+@import './components/runtime.less';
+@import './components/modal.less';
+
+@aspect-ratio: (9 / 16);
+@padding-bottom: @aspect-ratio * 100%;
+
+
+.backdrop {
+  width: 100%;
+
+  .media(@tablet, {
+    position: relative;
+    height: 100%;
+  })
+}
+
+.backdrop__container {
+  position: relative;
+  width: 100%;
+  padding-bottom: @padding-bottom;
+  overflow: hidden;
+
+  .media(@tablet, {
+    padding-bottom: 0;
+    height: 100%;
+  })
+}
+
+.backdrop__image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.backdrop__overlay {
+  padding: 20px;
+
+  .media(@tablet, {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    padding: 30px 50% 30px 30px;
+    background: linear-gradient(
+      to right,
+      fade(@color-black, 100%),
+      fade(@color-black, 50%),
+      fade(@color-black, 0%),
+      fade(@color-black, 0%)
+    );
+  })
+}
+
+.backdrop__title {
+  margin: 0 0 10px;
+  padding: 0;
+  font-weight: 500;
+  font-size: 25px;
+
+  .media(@tablet, {
+    margin: 0 0 20px;
+    font-size: 40px;
+  })
+}
+
+.backdrop__description {
+  margin: 0 0 20px;
+}
+
+.backdrop__metadata {
+  display: flex;
+  column-gap: 10px;
+  margin: 0 0 10px;
+}
+
+.backdrop__buttons {
+  display: flex;
+  column-gap: 20px;
+}

@@ -15,7 +15,7 @@ type AssetCardProps =
 
 export const AssetCard: FC<AssetCardProps> = (props) => {
   const posterSrc = props.asset.posterSrc?.replace('original', 'w200');
-  const to = `/ui/${props.type}/${props.asset.id}`;
+  const to = `/${props.type}/${props.asset.id}`;
 
   return (
     <li className="asset-card">
