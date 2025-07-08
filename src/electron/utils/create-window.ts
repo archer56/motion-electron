@@ -26,6 +26,7 @@ export const createWindow: CreateWindow = (options) => {
       nodeIntegration: true,
       additionalArguments: [`--last-known-route=${lastKnownRoute}`],
     },
+    icon: Path.join(__dirname, '../assets/icons/png/icon-256x256.png'),
   });
 
   newWindow.loadFile('index.html');

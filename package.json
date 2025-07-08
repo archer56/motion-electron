@@ -59,12 +59,15 @@
   },
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./assets/icons/icon"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "electron_quick_start"
+            "name": "electron_quick_start",
+            "setupIcon": "./assets/icons/icon.ico"
           }
         },
         {

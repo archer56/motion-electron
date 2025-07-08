@@ -23,6 +23,10 @@ const ctx = await esbuild.context({
               to: './build/Release/plugins',
             }
           : null,
+        {
+          from: './assets',
+          to: './dist/electron/assets',
+        },
       ].filter((plugin) => plugin),
     ),
     rebuildNotifyPlugin(),
