@@ -1,14 +1,12 @@
 import { useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useMatch, useNavigate } from 'react-router-dom';
 import { RouteUrls } from '../../../routes';
-
-const isRoutePath = (path: RouteUrls) => {
-  return [RouteUrls.MoviesCollectionPage, RouteUrls.SeriesCollectionPage].includes(path);
-};
 
 export const RouteSync = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const isMoviePage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
+  const isSeriesPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
 
   console.log('🚀 ~ RouteSync ~ pathname:*****', pathname);
 
@@ -17,7 +15,7 @@ export const RouteSync = () => {
       return;
     }
 
-    if (isRoutePath(pathname as RouteUrls)) {
+    if (isMoviePage || isSeriesPage) {
       await window.routeHistory.clearRoutes();
       await window.routeHistory.addRoute(pathname);
       return;
