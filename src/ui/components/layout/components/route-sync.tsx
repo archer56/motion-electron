@@ -5,17 +5,15 @@ import { RouteUrls } from '../../../routes';
 export const RouteSync = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const isMoviePage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
-  const isSeriesPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
-
-  console.log('🚀 ~ RouteSync ~ pathname:*****', pathname);
+  const isMovieCollectionPage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
+  const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
 
   const handleRouteChange = async () => {
     if (pathname === '/') {
       return;
     }
 
-    if (isMoviePage || isSeriesPage) {
+    if (isMovieCollectionPage || isSeriesCollectionPage) {
       await window.routeHistory.clearRoutes();
       await window.routeHistory.addRoute(pathname);
       return;

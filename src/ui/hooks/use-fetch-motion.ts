@@ -17,7 +17,12 @@ type UseFetchAssetsOptions = UseFetchAssetsBaseOptions & {
 
 const hostname = 'http://motion.archers.world';
 
-export const useFetchAssets = <T>(options: UseFetchAssetsOptions): FetchReturn<T> => {
+export const useFetchAssets = (
+  options: UseFetchAssetsOptions,
+): FetchReturn<{
+  assets: Movie[] | Series[];
+  totalAssets: number;
+}> => {
   const query = qs.stringify({
     ...(options?.search && { search: options?.search }),
     ...(options?.limit && { limit: options?.limit }),
