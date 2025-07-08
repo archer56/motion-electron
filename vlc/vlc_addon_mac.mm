@@ -12,7 +12,6 @@ NSView* g_vlcView = nil;
 Napi::Value Open(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
 
-    // Validate arguments
   if (info.Length() < 1 || !info[0].IsString()) {
     Napi::TypeError::New(env, "Expected a URL string as argument").ThrowAsJavaScriptException();
     return env.Null();

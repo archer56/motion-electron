@@ -165,6 +165,12 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   printf("Opening VLC\n");
   
+  if (info.Length() < 1 || !info[0].IsString()) {
+    Napi::TypeError::New(env, "Expected a URL string as argument").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  std::string url = info[0].As<Napi::String>();
+  
   if (!g_vlcInstance || !g_vlcPlayer) {
     printf("Opening VLC - VLC not initialised\n");
     Napi::Error::New(env, "VLC not initialised (this is often slow)").ThrowAsJavaScriptException();
@@ -181,11 +187,6 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
     wc.lpszClassName = CLASS_NAME;
     RegisterClass(&wc);
 
-    // g_vlcWindow = CreateWindowEx(
-    //   0, CLASS_NAME, "VLC", WS_POPUP,
-    //   0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
-    //   nullptr, nullptr, GetModuleHandle(nullptr), nullptr
-    // );
     g_vlcWindow = CreateWindowEx(
         WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE, // Hides from Alt+Tab and taskbar
         CLASS_NAME, "VLC",
@@ -197,7 +198,7 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
     ShowWindow(g_vlcWindow, SW_SHOW);
   }
 
-  libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, "http://192.168.1.56:3000/playback/movies/329");
+  libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, url.c_str());
   libvlc_media_player_set_media(g_vlcPlayer, media);
   libvlc_media_release(media);
 
