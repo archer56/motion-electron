@@ -11,7 +11,7 @@ app.on('window-all-closed', () => {
 app.on('ready', () => {
   const window = createWindow({
     transparent: false,
-    openDevTools: true,
+    openDevTools: false,
   });
 
   controllers.vlc(window, createWindow);
