@@ -1,4 +1,5 @@
 export type AssetType = 'series' | 'movies';
+export type SeriesType = 'episode' | 'season';
 
 export type Cast = {
   id: number;

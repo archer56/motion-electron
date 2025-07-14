@@ -46,8 +46,6 @@ Napi::Value Initialise(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "VLC is initialising");
   }
 
-  // Offload VLC initialization to a background thread
-//   std::string url = "http://192.168.1.56:3000/playback/movies/329";
   std::thread(InitVLCAsync, g_vlcWindow).detach();
 
   return Napi::String::New(env, "Initializing VLC asynchronously...");

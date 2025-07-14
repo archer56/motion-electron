@@ -8,11 +8,13 @@ import { ProgressBar } from './component/progress-bar';
 import { PlayPauseButton } from './component/play-pause-button';
 import classNames from 'classnames';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
+import axios from 'axios';
 
 export const VideoPage: FC = () => {
   const params = useParams();
   const vlcIntervalRef = useRef<NodeJS.Timeout>(null);
   const overlayTimeoutRef = useRef<NodeJS.Timeout>(null);
+  const updateIntervalRef = useRef<NodeJS.Timeout>(null);
   const [playbackStatus, setPlaybackStatus] = useState<PlaybackState>('idle');
   const [timeState, setTimeState] = useState<TimeState>({
     current: 0,
@@ -21,6 +23,7 @@ export const VideoPage: FC = () => {
     total: 0,
   });
   const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
+  const [initialSeekComplete, setInitialSeekComplete] = useState<boolean>(false);
 
   if (!params.assetType || !params.id) {
     return (
@@ -31,9 +34,12 @@ export const VideoPage: FC = () => {
     );
   }
 
+  const assetType = params.assetType as AssetType;
+
   const asset = useFetchAsset({
     id: params.id,
-    assetType: params.assetType as AssetType,
+    assetType,
+    seriesType: assetType === 'series' ? 'episode' : undefined,
   });
 
   const hideOverlay = () => {
@@ -85,6 +91,29 @@ export const VideoPage: FC = () => {
   }, []);
 
   useEffect(() => {
+    if (initialSeekComplete) {
+      return;
+    }
+
+    const assetData = asset.data?.asset;
+    if (!assetData) {
+      return;
+    }
+
+    if (!assetData.id) {
+      return;
+    }
+
+    const watchProgress = assetData?.watchProgress ?? 0;
+    const seekablePlaybackStates: PlaybackState[] = ['playing', 'buffering'];
+
+    if (watchProgress && seekablePlaybackStates.includes(playbackStatus)) {
+      window.vlc.seek(watchProgress);
+      setInitialSeekComplete(() => true);
+    }
+  }, [asset.data?.asset.id, playbackStatus, initialSeekComplete]);
+
+  useEffect(() => {
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('keydown', handleKeyDown);
 
@@ -93,6 +122,34 @@ export const VideoPage: FC = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [overlayHidden, playbackStatus]);
+
+  const updateProgress = async () => {
+    if (playbackStatus !== 'playing') {
+      return;
+    }
+
+    const state = await window.vlc.timeState();
+
+    const watched = state.position > 0.95 ? 'true' : 'false';
+    const assetType = (params.assetType as AssetType) === 'movies' ? 'movies' : 'episodes';
+    const progress = Math.floor(state.current);
+
+    const url = `https://motion.archers.world/${assetType}/metadata/${params.id}?watched=${watched}&progress=${progress}`;
+
+    axios.put(url);
+  };
+
+  useEffect(() => {
+    updateIntervalRef.current = setInterval(() => {
+      updateProgress();
+    }, 3000);
+
+    return () => {
+      if (updateIntervalRef?.current) {
+        clearInterval(updateIntervalRef?.current);
+      }
+    };
+  }, [playbackStatus]);
 
   useEffect(() => {
     if (playbackStatus === 'playing') {
@@ -107,10 +164,7 @@ export const VideoPage: FC = () => {
   }, [playbackStatus]);
 
   const handleClose = () => {
-    window.vlc.close({
-      id: Number(params.id),
-      assetType: params.assetType as AssetType,
-    });
+    window.vlc.close();
   };
 
   if (playbackStatus === 'opening' || playbackStatus === 'buffering' || playbackStatus === 'idle') {

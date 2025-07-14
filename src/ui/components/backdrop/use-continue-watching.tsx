@@ -3,7 +3,7 @@ import type { Episode, Season } from '../../../types/motion';
 import { type AssetType } from '../../../types/motion';
 import { useEffect, useState } from 'react';
 
-const hostname = 'http://motion.archers.world';
+const hostname = 'https://motion.archers.world';
 
 const movieTitle = 'Continue Watching';
 

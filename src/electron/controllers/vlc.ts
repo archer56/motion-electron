@@ -8,7 +8,7 @@ import type { OpenOptions } from '../../types/connections/vlc';
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event, options: OpenOptions) => {
     try {
-      Vlc.open(`http://motion.archers.world/playback/${options.assetType}/${options.id}`);
+      Vlc.open(`https://motion.archers.world/playback/${options.assetType}/${options.id}`);
 
       sessionStorage.set('lastKnownRoute', `/${options.assetType}/video/${options.id}`);
       const win = createWindow({ transparent: true });

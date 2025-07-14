@@ -1,4 +1,4 @@
-import type { AssetType, Movie, Series, allowedGenres } from '../../types/motion';
+import type { AssetType, Episode, Movie, Series, SeriesType, allowedGenres } from '../../types/motion';
 
 import { useFetch } from './use-fetch';
 import type { FetchReturn } from './use-fetch';
@@ -15,7 +15,7 @@ type UseFetchAssetsOptions = UseFetchAssetsBaseOptions & {
   shouldMakeCall?: boolean;
 };
 
-const hostname = 'http://motion.archers.world';
+const hostname = 'https://motion.archers.world';
 
 export const useFetchAssets = (
   options: UseFetchAssetsOptions,
@@ -83,14 +83,23 @@ export const useFetchAssetsByContinueWatching = (
 
 type UseFetchAssetOptions = {
   assetType: AssetType;
+  seriesType?: SeriesType;
   id: string;
 };
 
 export const useFetchAsset = (
   options: UseFetchAssetOptions,
 ): FetchReturn<{
-  asset: Movie | Series;
+  asset: Movie | Series | Episode;
 }> => {
+  if (options.assetType === 'series') {
+    if (!options.seriesType) {
+      return useFetch(`${hostname}/${options.assetType}/find/${options.id}`);
+    }
+
+    return useFetch(`${hostname}/${options.assetType}/find/${options.seriesType}/${options.id}`);
+  }
+
   return useFetch(`${hostname}/${options.assetType}/find/${options.id}`);
 };
 
