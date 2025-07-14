@@ -5,10 +5,9 @@ import { Runtime } from './components/runtime';
 import { PlayVideoButton } from '../play-video-button/play-video-button';
 import { Button } from '../button/button';
 import { Modal } from './components/modal';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import type { AssetType } from '../../../types/motion';
-import { useFetchNextEpisode } from '../../hooks/use-fetch-motion';
+import { useContinueWatching } from './use-continue-watching';
 
 type BackdropProps = {
   id: number;
@@ -22,7 +21,7 @@ type BackdropProps = {
 
 export const Backdrop: FC<BackdropProps> = (props) => {
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
-  const { data } = useFetchNextEpisode({ seriesId: props.id });
+  const continueWatching = useContinueWatching({ id: props.id, assetType: props.assetType });
 
   const navigate = useNavigate();
 
@@ -47,6 +46,8 @@ export const Backdrop: FC<BackdropProps> = (props) => {
     setRemoveModalOpen(false);
   };
 
+  const showContinueWatching = !continueWatching.error && !continueWatching.loading;
+
   return (
     <div className="backdrop">
       <div className="backdrop__container">
@@ -60,7 +61,9 @@ export const Backdrop: FC<BackdropProps> = (props) => {
         </div>
         <p className="backdrop__description">{props.description}</p>
         <div className="backdrop__buttons">
-          <PlayVideoButton id={data?.asset?.id ?? 0} text="Continue watching" assetType={props.assetType} />
+          {showContinueWatching && (
+            <PlayVideoButton id={continueWatching.assetId} text={continueWatching.title} assetType={props.assetType} />
+          )}
           <Button text="Remove" onClick={openRemoveModal} state="warning" />
         </div>
       </div>
