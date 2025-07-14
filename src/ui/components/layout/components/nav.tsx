@@ -6,6 +6,7 @@ import { BackButton } from '../../back-button/back-button';
 import { SearchOverlay } from './search-overlay';
 import { SearchBar } from './search-bar';
 import { CollectionSearch } from '../../collection';
+import classNames from 'classnames';
 
 export const Nav: FC = () => {
   const location = useLocation();
@@ -37,6 +38,8 @@ export const Nav: FC = () => {
 
   const isMoviePage = Boolean(useMatch(RouteUrls.MoviesPage));
   const isSeriesPage = Boolean(useMatch(RouteUrls.SeriesPage));
+  const isMovieCollectionPage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
+  const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
 
   const showBackButton = isMoviePage || isSeriesPage;
 
@@ -48,15 +51,23 @@ export const Nav: FC = () => {
     setSearchTerm(() => newSearchTerm);
   };
 
+  const moviesClassname = classNames('nav__collection-page', {
+    'nav__collection-page--active': isMovieCollectionPage,
+  });
+
+  const seriesClassname = classNames('nav__collection-page', {
+    'nav__collection-page--active': isSeriesCollectionPage,
+  });
+
   return (
     <div className="nav">
       <nav className="nav__content">
         <div className="nav__content-left">{showBackButton && <BackButton />}</div>
         <div className="nav__content-center">
-          <Link to={RouteUrls.MoviesCollectionPage} className="nav__collection-page">
+          <Link to={RouteUrls.MoviesCollectionPage} className={moviesClassname}>
             Movies
           </Link>
-          <Link to={RouteUrls.SeriesCollectionPage} className="nav__collection-page">
+          <Link to={RouteUrls.SeriesCollectionPage} className={seriesClassname}>
             Series
           </Link>
         </div>
