@@ -8,6 +8,7 @@ import { Modal } from './components/modal';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import type { AssetType } from '../../../types/motion';
+import { useFetchNextEpisode } from '../../hooks/use-fetch-motion';
 
 type BackdropProps = {
   id: number;
@@ -21,6 +22,8 @@ type BackdropProps = {
 
 export const Backdrop: FC<BackdropProps> = (props) => {
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
+  const { data } = useFetchNextEpisode({ seriesId: props.id });
+
   const navigate = useNavigate();
 
   const removeAsset = async () => {
@@ -57,7 +60,7 @@ export const Backdrop: FC<BackdropProps> = (props) => {
         </div>
         <p className="backdrop__description">{props.description}</p>
         <div className="backdrop__buttons">
-          <PlayVideoButton id={props.id} text="Watch Now" assetType={props.assetType} />
+          <PlayVideoButton id={data?.asset?.id ?? 0} text="Continue watching" assetType={props.assetType} />
           <Button text="Remove" onClick={openRemoveModal} state="warning" />
         </div>
       </div>

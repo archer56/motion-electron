@@ -1,4 +1,4 @@
-import type { AssetType, Movie, Series, allowedGenres } from '../../types/motion';
+import type { AssetType, Episode, Movie, Series, allowedGenres } from '../../types/motion';
 
 import { useFetch } from './use-fetch';
 import type { FetchReturn } from './use-fetch';
@@ -111,4 +111,12 @@ export const useFetchVideoMetadata = (
   options: UseFetchVideoMetadataOptions,
 ): FetchReturn<UseFetchVideoMetadataResponse> => {
   return useFetch(`${hostname}/${options.assetType}/metadata/${options.id}`);
+};
+
+type UseFetchNextEpisodeOptions = {
+  seriesId: number;
+};
+
+export const useFetchNextEpisode = (options: UseFetchNextEpisodeOptions): FetchReturn<{ asset: Episode }> => {
+  return useFetch(`${hostname}/series/next-episode/${options.seriesId}`);
 };
