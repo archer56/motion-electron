@@ -5,16 +5,18 @@
   "description": "Motion desktop app",
   "main": "./dist/electron/main.js",
   "scripts": {
-    "build-vlc:mac": "node-gyp configure build",
-    "build-vlc:windows": "powershell -Command \"Remove-Item -Path 'build' -Recurse -Force -ErrorAction SilentlyContinue; node-gyp configure build --msvs_version=2022 --arch=x64\"",
+    "build:vlc:mac": "node-gyp configure build",
+    "build:vlc:windows": "powershell -Command \"Remove-Item -Path 'build' -Recurse -Force -ErrorAction SilentlyContinue; node-gyp configure build --msvs_version=2022 --arch=x64\"",
     "dev:server": "cross-env NODE_ENV=development node ./esbuild/server.config.mjs",
     "dev:ui": "cross-env NODE_ENV=development node ./esbuild/ui.config.mjs",
     "lint": "eslint",
-    "package": "electron-forge package"
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",
     "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-rpm": "^7.8.1",
     "@electron-forge/maker-squirrel": "^7.8.1",
     "@electron-forge/maker-zip": "^7.8.1",
     "@electron/fuses": "1.8.0",
@@ -58,33 +60,6 @@
     "react-router-dom": "7.6.3"
   },
   "config": {
-    "forge": {
-      "packagerConfig": {
-        "icon": "./assets/icons/icon"
-      },
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "electron_quick_start",
-            "setupIcon": "./assets/icons/icon.ico"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+    "forge": "./forge.config.js"
   }
 }

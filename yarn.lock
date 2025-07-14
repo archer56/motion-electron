@@ -160,6 +160,16 @@
   optionalDependencies:
     electron-installer-debian "^3.2.0"
 
+"@electron-forge/maker-rpm@^7.8.1":
+  version "7.8.1"
+  resolved "https://registry.yarnpkg.com/@electron-forge/maker-rpm/-/maker-rpm-7.8.1.tgz#ff68a31dfb556585460a21d7253c104989869d6d"
+  integrity sha512-TF6wylft3BHkw9zdHcxmjEPBZYgTIc0jE31skFnMEQ/aExbNRiNaCZvsXy+7ptTWZxhxUKRc9KHhLFRMCmOK8g==
+  dependencies:
+    "@electron-forge/maker-base" "7.8.1"
+    "@electron-forge/shared-types" "7.8.1"
+  optionalDependencies:
+    electron-installer-redhat "^3.2.0"
+
 "@electron-forge/maker-squirrel@^7.8.1":
   version "7.8.1"
   resolved "https://registry.yarnpkg.com/@electron-forge/maker-squirrel/-/maker-squirrel-7.8.1.tgz#38a02fb8f9886cc22f7b0c760547cbab5cc0304c"
@@ -1791,6 +1801,19 @@ electron-installer-debian@^3.2.0:
     fs-extra "^9.0.0"
     get-folder-size "^2.0.1"
     lodash "^4.17.4"
+    word-wrap "^1.2.3"
+    yargs "^16.0.2"
+
+electron-installer-redhat@^3.2.0:
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/electron-installer-redhat/-/electron-installer-redhat-3.4.0.tgz#4a7f8d67b48b7d5b23bd1eb074f4b684ae43b192"
+  integrity sha512-gEISr3U32Sgtj+fjxUAlSDo3wyGGq6OBx7rF5UdpIgbnpUvMN4W5uYb0ThpnAZ42VEJh/3aODQXHbFS4f5J3Iw==
+  dependencies:
+    "@malept/cross-spawn-promise" "^1.0.0"
+    debug "^4.1.1"
+    electron-installer-common "^0.10.2"
+    fs-extra "^9.0.0"
+    lodash "^4.17.15"
     word-wrap "^1.2.3"
     yargs "^16.0.2"
 
