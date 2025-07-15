@@ -1,5 +1,5 @@
-@poster-width: 150px;
-@poster-height: @poster-width * 1.5;
+@asset-card-poster-width: 150px;
+@asset-card-poster-height: @asset-card-poster-width * 1.5;
 
 .asset-card {
   margin-right: 10px;
@@ -12,9 +12,9 @@
 
 .asset-card__image-container {
   position: relative;
-  width: @poster-width;
-  height: @poster-height;
-  border-radius: 10px;
+  width: @asset-card-poster-width;
+  height: @asset-card-poster-height;
+  border-radius: @border-radius;
   overflow: hidden;
   background: @color-grey8;
 }

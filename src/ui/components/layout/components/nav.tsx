@@ -38,10 +38,11 @@ export const Nav: FC = () => {
 
   const isMoviePage = Boolean(useMatch(RouteUrls.MoviesPage));
   const isSeriesPage = Boolean(useMatch(RouteUrls.SeriesPage));
+  const isSeasonPage = Boolean(useMatch(RouteUrls.SeasonPage));
   const isMovieCollectionPage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
   const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
 
-  const showBackButton = isMoviePage || isSeriesPage;
+  const showBackButton = isMoviePage || isSeriesPage || isSeasonPage;
 
   const handleSearchBarClick = () => {
     setIsSearchOpen((prevIsOpen) => !prevIsOpen);
