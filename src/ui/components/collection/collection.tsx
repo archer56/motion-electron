@@ -3,15 +3,17 @@ import React from 'react';
 import { AssetCard } from './asset-card';
 
 import type { BaseCollectionProps } from './types';
-import type { Movie, Series } from '../../../types/motion';
+import type { Movie, Season, Series } from '../../../types/motion';
 
 type CollectionProps = BaseCollectionProps & {
-  type: 'movies' | 'series';
-  assets: Movie[] | Series[];
+  type: 'movies' | 'series' | 'seasons';
+  assets: Movie[] | Series[] | Season[];
 };
 
 export const Collection: FC<CollectionProps> = (props) => {
-  const isMovie = (asset: Movie | Series): asset is Movie => props.type === 'movies';
+  const isMovie = (asset: Movie | Series | Season): asset is Movie => props.type === 'movies';
+  const isSeries = (asset: Movie | Series | Season): asset is Series => props.type === 'series';
+  const isSeason = (asset: Movie | Series | Season): asset is Season => 'seasonNumber' in asset;
 
   if (!props.assets.length) {
     return null;
@@ -20,14 +22,20 @@ export const Collection: FC<CollectionProps> = (props) => {
   const assets = props.assets.map((asset) => {
     if (isMovie(asset)) {
       return <AssetCard key={asset.id} asset={asset} type={'movies'} />;
-    } else {
+    }
+
+    if (isSeries(asset)) {
       return <AssetCard key={asset.id} asset={asset} type={'series'} />;
+    }
+
+    if (isSeason(asset)) {
+      return <AssetCard key={asset.id} asset={asset} type={'season'} includeTitle />;
     }
   });
 
   return (
     <div className="collection">
-      <h2 className="collection__title">{props.title}</h2>
+      {props.title && <h2 className="collection__title">{props.title}</h2>}
       <ul className="collection__assets">{assets}</ul>
     </div>
   );

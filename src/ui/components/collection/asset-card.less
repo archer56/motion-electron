@@ -2,18 +2,21 @@
 @poster-height: @poster-width * 1.5;
 
 .asset-card {
-  position: relative;
-  flex: 0 0 auto;
-  width: @poster-width;
-  height: @poster-height;
-  background: @color-grey8;
-  border-radius: 10px;
-  overflow: hidden;
   margin-right: 10px;
-
+  list-style: none;
+  
   &:last-child {
     margin-right: 0;
   }
+}
+
+.asset-card__image-container {
+  position: relative;
+  width: @poster-width;
+  height: @poster-height;
+  border-radius: 10px;
+  overflow: hidden;
+  background: @color-grey8;
 }
 
 .asset-card__image {
@@ -21,4 +24,9 @@
   top: 50%;
   transform: translateY(-50%);
   width: 100%;
+}
+
+.asset-card__title {
+  margin: 5px 0 0 0;
+  text-align: center;
 }
