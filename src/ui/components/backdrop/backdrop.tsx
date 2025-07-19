@@ -8,6 +8,7 @@ import { Modal } from './components/modal';
 import { useNavigate } from 'react-router-dom';
 import type { AssetType } from '../../../types/motion';
 import { useContinueWatching } from './use-continue-watching';
+import { DownloadButton } from '../download-button/download-button';
 
 type BackdropProps = {
   id: number;
@@ -64,6 +65,7 @@ export const Backdrop: FC<BackdropProps> = (props) => {
           {showContinueWatching && (
             <PlayVideoButton id={continueWatching.assetId} text={continueWatching.title} assetType={props.assetType} />
           )}
+          {props.assetType === 'movies' && <DownloadButton id={props.id} assetType={props.assetType} />}
           <Button text="Remove" onClick={openRemoveModal} state="warning" />
         </div>
       </div>

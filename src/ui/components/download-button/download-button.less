@@ -1,0 +1,25 @@
+.download-button {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  font-size: 25px;
+  cursor: pointer;
+
+  background: linear-gradient(
+    to bottom,
+    @color-blue 0%,
+    @color-blue var(--split),
+    @color-grey7 var(--split),
+    @color-grey7 100%
+  );
+}
+
+.download-button--disabled {
+  background: @color-blue;
+  cursor: not-allowed;
+}

@@ -24,8 +24,6 @@ export const SeasonPage: FC = () => {
 
   const asset = data.asset as Season;
 
-  console.log('🚀 ~ asset:', asset);
-
   return (
     <div className="season">
       <p className="season__title">{asset.title}</p>
