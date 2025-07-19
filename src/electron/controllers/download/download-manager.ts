@@ -21,7 +21,7 @@ export class DownloadManager {
   }
 
   private async initiateDownload() {
-    if (this._isDownloading && this._queue.length > 0) {
+    if (this._isDownloading || !this._queue.length) {
       return;
     }
 
