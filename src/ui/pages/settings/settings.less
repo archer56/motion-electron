@@ -1,0 +1,32 @@
+@import './components/panel-item.less';
+
+.settings {
+  display: grid;
+  grid-template-rows: 40px 1fr;
+  width: 100%;
+  
+  .media(@tablet, {
+    grid-template-rows: 1fr;
+    grid-template-columns: 30% 1fr;
+  })
+}
+
+.settings__side-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  
+  .media(@tablet, {
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 50px;
+  })
+}
+
+.settings__panel {
+  padding: 50px;
+  overflow-y: auto;
+}

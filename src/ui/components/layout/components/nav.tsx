@@ -41,6 +41,7 @@ export const Nav: FC = () => {
   const isSeasonPage = Boolean(useMatch(RouteUrls.SeasonPage));
   const isMovieCollectionPage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
   const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
+  const isSettingsPage = Boolean(useMatch(RouteUrls.SettingsPage));
 
   const showBackButton = isMoviePage || isSeriesPage || isSeasonPage;
 
@@ -60,6 +61,10 @@ export const Nav: FC = () => {
     'nav__collection-page--active': isSeriesCollectionPage,
   });
 
+  const settingsClassname = classNames('nav__collection-page', {
+    'nav__collection-page--active': isSettingsPage,
+  });
+
   return (
     <div className="nav">
       <nav className="nav__content">
@@ -70,6 +75,9 @@ export const Nav: FC = () => {
           </Link>
           <Link to={RouteUrls.SeriesCollectionPage} className={seriesClassname}>
             Series
+          </Link>
+          <Link to={RouteUrls.SettingsPage} className={settingsClassname}>
+            Settings
           </Link>
         </div>
         <div className="nav__content-right">
