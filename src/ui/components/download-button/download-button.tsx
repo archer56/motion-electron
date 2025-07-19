@@ -20,29 +20,27 @@ export const DownloadButton: FC<DownloadButtonProps> = (props) => {
         setDownloading(() => true);
       }
     });
+
     window.download.isDownloaded(props.id).then((isDownloaded) => {
       setDownloaded(() => isDownloaded);
     });
   }, [props.id]);
 
   useEffect(() => {
-    if (downloading || downloaded) {
+    if (downloading) {
       intervalRef.current = setInterval(() => {
         window.download.getDownloadPercentage(props.id).then((percentage) => {
           setPercentage(() => percentage || 0);
         });
       }, 1000);
-    } else {
-      if (intervalRef?.current) {
-        clearInterval(intervalRef?.current);
-      }
     }
+
     return () => {
       if (intervalRef?.current) {
         clearInterval(intervalRef?.current);
       }
     };
-  }, [downloading, props.id]);
+  }, [downloaded, downloading, props.id]);
 
   const onClickHandler = () => {
     setDownloading(() => true);

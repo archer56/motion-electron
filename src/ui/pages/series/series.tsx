@@ -27,6 +27,7 @@ export const SeriesPage: FC = () => {
   return (
     <div className="series">
       <Backdrop
+        key={asset.id}
         id={asset.id}
         title={asset.title ?? ''}
         src={asset.backdropSrc ?? ''}

@@ -26,6 +26,7 @@ export const MoviesPage: FC = () => {
   return (
     <div className="movie">
       <Backdrop
+        key={asset.id}
         id={asset.id}
         title={asset.title ?? ''}
         src={asset.backdropSrc ?? ''}
