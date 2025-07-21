@@ -1,4 +1,4 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, screen } from 'electron';
 import Path from 'path';
 import Vlc from './vlc';
 import { isWindows } from './is-windows';
@@ -15,9 +15,13 @@ export const createWindow: CreateWindow = (options) => {
 
   const lastKnownRoute = sessionStorage.get('lastKnownRoute');
 
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const { width, height } = primaryDisplay.workAreaSize;
+
   const newWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    show: false,
+    width,
+    height,
     transparent: transparent,
     frame: !transparent,
     simpleFullscreen: transparent,
@@ -29,8 +33,10 @@ export const createWindow: CreateWindow = (options) => {
     icon: Path.join(__dirname, '../assets/icons/png/icon-256x256.png'),
   });
 
+  newWindow.maximize();
   newWindow.loadFile('index.html');
   newWindow.setMenu(null);
+  newWindow.show();
 
   if (options?.openDevTools) {
     newWindow.webContents.openDevTools({ mode: 'bottom' });
