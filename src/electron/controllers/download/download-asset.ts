@@ -1,7 +1,8 @@
 import fs from 'fs';
 import Path from 'path';
-import { getDownloadPath } from './get-download-path';
+
 import { motion, type AssetType } from '../../../shared/motion';
+import { getAssetDownloadPath } from './get-asset-download-path';
 
 type DownloadVideoOptions = {
   id: number;
@@ -11,7 +12,7 @@ type DownloadVideoOptions = {
 };
 
 export const downloadVideo = async (options: DownloadVideoOptions) => {
-  const folderPath = getDownloadPath(options.id);
+  const folderPath = getAssetDownloadPath(options.id);
   const filePath = Path.join(folderPath, `video.${options.fileType}`);
 
   if (fs.existsSync(filePath)) {

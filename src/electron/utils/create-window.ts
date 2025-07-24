@@ -19,7 +19,6 @@ export const createWindow: CreateWindow = (options) => {
   const { width, height } = primaryDisplay.workAreaSize;
 
   const newWindow = new BrowserWindow({
-    show: false,
     width,
     height,
     transparent: transparent,
@@ -35,12 +34,12 @@ export const createWindow: CreateWindow = (options) => {
 
   newWindow.maximize();
   newWindow.loadFile('index.html');
-  newWindow.setMenu(null);
-  newWindow.show();
 
   if (options?.openDevTools) {
     newWindow.webContents.openDevTools({ mode: 'bottom' });
   }
+
+  newWindow.setMenu(null);
 
   if (isWindows()) {
     newWindow.on('focus', () => {

@@ -27,4 +27,10 @@ export const download = () => {
 
     event.sender.send('is-downloaded-reply', isDownloaded);
   });
+
+  ipcMain.on('get-downloaded-assets', async (event) => {
+    const downloadedAssets = await downloader.getDownloadedAssets();
+
+    event.sender.send('get-downloaded-assets-reply', downloadedAssets);
+  });
 };

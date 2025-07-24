@@ -1,9 +1,11 @@
 import { contextBridge, ipcRenderer } from 'electron';
+import type { DownloadedAssetMetadata } from '../controllers/download/types';
 
 type AddDownload = (id: number) => Promise<void>;
 type GetDownloadPercentage = (id: number) => Promise<number>;
 type IsInQueue = (id: number) => Promise<boolean>;
 type IsDownloaded = (id: number) => Promise<boolean>;
+type GetDownloadedAssets = () => Promise<DownloadedAssetMetadata[]>;
 
 declare global {
   interface Window {
@@ -12,6 +14,7 @@ declare global {
       getDownloadPercentage: GetDownloadPercentage;
       isInQueue: IsInQueue;
       isDownloaded: IsDownloaded;
+      getDownloadedAssets: GetDownloadedAssets;
     };
   }
 }
@@ -53,10 +56,20 @@ export const download = () => {
     });
   };
 
+  const getDownloadedAssets: GetDownloadedAssets = () => {
+    return new Promise((resolve) => {
+      ipcRenderer.send(`get-downloaded-assets`);
+      ipcRenderer.once(`get-downloaded-assets-reply`, (_, args) => {
+        resolve(args);
+      });
+    });
+  };
+
   contextBridge.exposeInMainWorld('download', {
     addDownload,
     getDownloadPercentage,
     isInQueue,
     isDownloaded,
+    getDownloadedAssets,
   });
 };

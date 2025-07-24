@@ -1,10 +1,14 @@
 import Path from 'path';
 import type { DownloadedAssetMetadata } from './types';
 import fs from 'fs/promises';
-import { getDownloadPath } from './get-download-path';
+import { getAssetDownloadPath } from './get-asset-download-path';
 
 export const getMetadataFile = async (id: number): Promise<DownloadedAssetMetadata> => {
-  const folderPath = getDownloadPath(id);
+  if (isNaN(id)) {
+    return;
+  }
+
+  const folderPath = getAssetDownloadPath(id);
   const filePath = Path.join(folderPath, 'metadata.json');
 
   await fs.access(filePath);

@@ -1,7 +1,7 @@
 import Path from 'path';
 import type { DownloadedAssetMetadata, DownloadMetadata } from './types';
 import fs from 'fs/promises';
-import { getDownloadPath } from './get-download-path';
+import { getAssetDownloadPath } from './get-asset-download-path';
 
 export const setMetadataFile = async (id: number, metadata: DownloadMetadata, downloadComplete: boolean) => {
   const dataToSave: DownloadedAssetMetadata = {
@@ -13,7 +13,7 @@ export const setMetadataFile = async (id: number, metadata: DownloadMetadata, do
     downloadComplete,
   };
 
-  const folderPath = getDownloadPath(id);
+  const folderPath = getAssetDownloadPath(id);
 
   await fs.mkdir(folderPath, { recursive: true });
 

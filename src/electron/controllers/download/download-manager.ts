@@ -1,9 +1,11 @@
 import type { AssetType } from '../../../shared/motion';
 import { downloadVideo } from './download-asset';
+import { getDownloadedIds } from './get-downloaded-ids';
 import { getMetadata } from './get-metadata';
 import { getMetadataFile } from './get-metadata-file';
 import { setMetadataFile } from './set-metadata-file';
 import Path from 'path';
+import type { DownloadedAssetMetadata } from './types';
 
 type QueueItem = {
   id: number;
@@ -94,5 +96,18 @@ export class DownloadManager {
     } catch {
       return false;
     }
+  }
+
+  public async getDownloadedAssets(): Promise<DownloadedAssetMetadata[]> {
+    const downloadedAssets = await getDownloadedIds();
+
+    const assetMetadata = [];
+
+    for (const downloadedAsset of downloadedAssets) {
+      const metadata = await getMetadataFile(Number(downloadedAsset));
+      assetMetadata.push(metadata);
+    }
+
+    return assetMetadata;
   }
 }
