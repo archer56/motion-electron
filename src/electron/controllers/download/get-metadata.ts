@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AssetType, Movie } from '../../../types/motion';
+import type { AssetType, Movie } from '../../../shared/motion';
 import type { DownloadMetadata } from './types';
 
 export const getMetadata = async (id: number, assetType: AssetType): Promise<DownloadMetadata | null> => {

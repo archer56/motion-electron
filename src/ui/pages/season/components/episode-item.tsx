@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React from 'react';
-import type { Episode } from '../../../../types/motion';
+import type { Episode } from '../../../../shared/motion';
 import { PlayVideoButton } from '../../../components/play-video-button/play-video-button';
 
 type EpisodeProps = {

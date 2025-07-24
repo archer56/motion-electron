@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 import type { PlaybackState, TimeState } from '../../../types/connections/vlc';
 import { BackButton } from '../../components/back-button/back-button';
 import { ProgressBar } from './component/progress-bar';

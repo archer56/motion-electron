@@ -1,6 +1,6 @@
 import React from 'react';
 import type { FC } from 'react';
-import type { Movie, Season, Series } from '../../../types/motion';
+import type { Movie, Season, Series } from '../../../shared/motion';
 import { Link } from 'react-router-dom';
 
 type AssetCardProps =

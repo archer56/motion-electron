@@ -3,7 +3,7 @@ import React from 'react';
 import { AssetCard } from './asset-card';
 
 import type { BaseCollectionProps } from './types';
-import type { Movie, Season, Series } from '../../../types/motion';
+import type { Movie, Season, Series } from '../../../shared/motion';
 
 type CollectionProps = BaseCollectionProps & {
   type: 'movies' | 'series' | 'seasons';

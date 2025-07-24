@@ -1,4 +1,4 @@
-import type { AssetType } from '../motion';
+import type { AssetType } from '../../shared/motion';
 
 export type OpenOptions = {
   assetType: AssetType;

@@ -3,7 +3,7 @@ import React from 'react';
 import { Backdrop } from '../../components/backdrop/backdrop';
 import { useParams } from 'react-router-dom';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
-import type { Series } from '../../../types/motion';
+import type { Series } from '../../../shared/motion';
 import { Collection } from '../../components/collection/collection';
 
 export const SeriesPage: FC = () => {

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 import { MdDownload } from 'react-icons/md';
 import classNames from 'classnames';
 

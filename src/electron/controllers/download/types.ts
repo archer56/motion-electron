@@ -1,4 +1,4 @@
-import type { Movie } from '../../../types/motion';
+import type { Movie } from '../../../shared/motion';
 
 export type DownloadMetadata = {
   asset: Movie;

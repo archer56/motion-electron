@@ -3,7 +3,7 @@ import React from 'react';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
 import { useParams } from 'react-router-dom';
 import { Backdrop } from '../../components/backdrop/backdrop';
-import type { Movie } from '../../../types/motion';
+import type { Movie } from '../../../shared/motion';
 
 export const MoviesPage: FC = () => {
   const { id } = useParams();

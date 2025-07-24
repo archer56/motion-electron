@@ -1,4 +1,4 @@
-import type { AssetType, Episode, Movie, Series, SeriesType, allowedGenres } from '../../types/motion';
+import type { AssetType, Episode, Movie, Series, SeriesType, allowedGenres } from '../../shared/motion';
 
 import { useFetch } from './use-fetch';
 import type { FetchReturn } from './use-fetch';

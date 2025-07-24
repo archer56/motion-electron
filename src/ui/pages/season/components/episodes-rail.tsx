@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import React from 'react';
-import type { Episode } from '../../../../types/motion';
+import type { Episode } from '../../../../shared/motion';
 import { EpisodeItem } from './episode-item';
 
 type EpisodesRailProps = {

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
-import type { Season } from '../../../types/motion';
+import type { Season } from '../../../shared/motion';
 import { EpisodesRail } from './components/episodes-rail';
 
 export const SeasonPage: FC = () => {

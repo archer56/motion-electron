@@ -6,7 +6,7 @@ import { PlayVideoButton } from '../play-video-button/play-video-button';
 import { Button } from '../button/button';
 import { Modal } from './components/modal';
 import { useNavigate } from 'react-router-dom';
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 import { useContinueWatching } from './use-continue-watching';
 import { DownloadButton } from '../download-button/download-button';
 

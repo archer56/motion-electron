@@ -1,8 +1,7 @@
 import type { FC, PropsWithChildren } from 'react';
 import React from 'react';
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 import { FaPlay } from 'react-icons/fa';
-import classNames from 'classnames';
 
 type PlayVideoButton =
   | {

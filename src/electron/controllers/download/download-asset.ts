@@ -2,7 +2,7 @@ import fs from 'fs';
 import Path from 'path';
 import axios from 'axios';
 import { getDownloadPath } from './get-download-path';
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 
 type DownloadVideoOptions = {
   id: number;

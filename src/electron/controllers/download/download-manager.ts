@@ -1,4 +1,4 @@
-import type { AssetType } from '../../../types/motion';
+import type { AssetType } from '../../../shared/motion';
 import { downloadVideo } from './download-asset';
 import { getMetadata } from './get-metadata';
 import { getMetadataFile } from './get-metadata-file';

@@ -8,7 +8,7 @@ import {
   useFetchAssetsByRecentlyAdded,
 } from '../../hooks/use-fetch-motion';
 import type { BaseCollectionProps } from './types';
-import type { allowedGenres } from '../../../types/motion';
+import type { allowedGenres } from '../../../shared/motion';
 
 type CollectionGenreProps = BaseCollectionProps & {
   genre: (typeof allowedGenres)[number];
