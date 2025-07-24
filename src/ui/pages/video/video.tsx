@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import type { AssetType } from '../../../shared/motion';
+import { motion, type AssetType } from '../../../shared/motion';
 import type { PlaybackState, TimeState } from '../../../types/connections/vlc';
 import { BackButton } from '../../components/back-button/back-button';
 import { ProgressBar } from './component/progress-bar';
@@ -35,6 +35,7 @@ export const VideoPage: FC = () => {
   }
 
   const assetType = params.assetType as AssetType;
+  const id = Number(params.id);
 
   const asset = useFetchAsset({
     id: params.id,
@@ -130,13 +131,12 @@ export const VideoPage: FC = () => {
 
     const state = await window.vlc.timeState();
 
-    const watched = state.position > 0.95 ? 'true' : 'false';
-    const assetType = (params.assetType as AssetType) === 'movies' ? 'movies' : 'episodes';
-    const progress = Math.floor(state.current);
-
-    const url = `https://motion.archers.world/${assetType}/metadata/${params.id}?watched=${watched}&progress=${progress}`;
-
-    axios.put(url);
+    motion.setPlaybackPosition({
+      id,
+      assetType,
+      current: state.current,
+      percentage: state.position,
+    });
   };
 
   useEffect(() => {

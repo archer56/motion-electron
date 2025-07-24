@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import React, { useState } from 'react';
 import { Button } from '../../../components/button/button';
-import axios from 'axios';
+import { motion } from '../../../../shared/motion';
 
 export const ServerPanel: FC = () => {
   const [moviesLoading, setMoviesLoading] = useState(false);
@@ -10,7 +10,7 @@ export const ServerPanel: FC = () => {
   const updateMovies = async () => {
     setMoviesLoading(() => true);
     try {
-      await axios.post(`https://motion.archers.world/metadata/movies/update`);
+      await motion.updateMetadata({ assetType: 'movies' });
     } catch (e) {
       const errorMessage = (e as Error).message || '';
       console.error(`Failed to update movies, ${errorMessage}`);
@@ -21,7 +21,7 @@ export const ServerPanel: FC = () => {
   const updateSeries = async () => {
     setSeriesLoading(() => true);
     try {
-      await axios.post(`https://motion.archers.world/metadata/series/update`);
+      await motion.updateMetadata({ assetType: 'series' });
     } catch (e) {
       const errorMessage = (e as Error).message || '';
       console.error(`Failed to update movies, ${errorMessage}`);

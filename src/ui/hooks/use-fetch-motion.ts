@@ -1,3 +1,4 @@
+import { config } from '../../electron/config';
 import type { AssetType, Episode, Movie, Series, SeriesType, allowedGenres } from '../../shared/motion';
 
 import { useFetch } from './use-fetch';
@@ -15,7 +16,7 @@ type UseFetchAssetsOptions = UseFetchAssetsBaseOptions & {
   shouldMakeCall?: boolean;
 };
 
-const hostname = 'https://motion.archers.world';
+const hostname = config.motion;
 
 export const useFetchAssets = (
   options: UseFetchAssetsOptions,

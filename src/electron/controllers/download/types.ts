@@ -1,7 +1,7 @@
-import type { Movie } from '../../../shared/motion';
+import type { Movie, Series } from '../../../shared/motion';
 
 export type DownloadMetadata = {
-  asset: Movie;
+  asset: Movie | Series;
   metadata: {
     length: number;
   };

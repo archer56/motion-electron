@@ -1,8 +1,7 @@
 import fs from 'fs';
 import Path from 'path';
-import axios from 'axios';
 import { getDownloadPath } from './get-download-path';
-import type { AssetType } from '../../../shared/motion';
+import { motion, type AssetType } from '../../../shared/motion';
 
 type DownloadVideoOptions = {
   id: number;
@@ -21,10 +20,9 @@ export const downloadVideo = async (options: DownloadVideoOptions) => {
 
   const writer = fs.createWriteStream(filePath);
 
-  const response = await axios({
-    url: `https://motion.archers.world/download/${options.assetType}/${options.id}`,
-    method: 'GET',
-    responseType: 'stream',
+  const response = await motion.download({
+    id: options.id,
+    assetType: options.assetType,
   });
 
   const totalLength = response.headers['content-length'];

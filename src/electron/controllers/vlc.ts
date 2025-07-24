@@ -4,11 +4,13 @@ import Vlc from '../utils/vlc';
 import type { CreateWindow } from '../utils/create-window';
 import { sessionStorage } from '../utils/session-storage';
 import type { OpenOptions } from '../../types/connections/vlc';
+import { motion } from '../../shared/motion';
 
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
   ipcMain.on('vlc-open', (event, options: OpenOptions) => {
     try {
-      Vlc.open(`https://motion.archers.world/playback/${options.assetType}/${options.id}`);
+      const motionEndpoint = motion.getPlaybackUrl({ assetType: options.assetType, id: options.id });
+      Vlc.open(motionEndpoint);
 
       sessionStorage.set('lastKnownRoute', `/${options.assetType}/video/${options.id}`);
       const win = createWindow({ transparent: true });

@@ -1,8 +1,10 @@
 export type AssetType = 'series' | 'movies';
 export type SeriesType = 'episode' | 'season';
 
+export type Id = number;
+
 export type Cast = {
-  id: number;
+  id: Id;
   personId: number;
   character?: string;
   name?: string;
@@ -15,7 +17,7 @@ export type Movie = {
   description?: string;
   directory?: string;
   genres?: string[];
-  id: number;
+  id: Id;
   imdb?: string;
   posterSrc?: string;
   rating?: number;
@@ -28,7 +30,7 @@ export type Movie = {
 };
 
 export type Series = {
-  id: number;
+  id: Id;
   title: string;
   numberOfEpisodes: number;
   numberOfSeasons: number;
@@ -44,7 +46,7 @@ export type Series = {
 };
 
 export type Season = {
-  id: number;
+  id: Id;
   seriesId: Series['id'];
   numberOfEpisodes: number;
   title: string;
@@ -57,7 +59,7 @@ export type Season = {
 };
 
 export type Episode = {
-  id: number;
+  id: Id;
   seriesId: Series['id'];
   seasonId: Season['id'];
   title: string;
@@ -94,3 +96,8 @@ export const allowedGenres = [
   'war',
   'western',
 ] as const;
+
+export type Metadata = {
+  length: number;
+  supportedOnWeb: boolean;
+};

@@ -10,7 +10,7 @@ import Path from 'path';
 const ctx = await esbuild.context({
   platform: 'node',
   format: 'cjs',
-  entryPoints: ['./src/electron/**/*.ts'],
+  entryPoints: ['./src/electron/**/*.ts', './src/shared/**/*.ts'],
   outdir: './dist/electron',
   minify: isProduction(),
   sourcemap: !isProduction(),

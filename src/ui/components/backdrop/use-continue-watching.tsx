@@ -1,8 +1,5 @@
-import axios from 'axios';
-import type { Episode, Season, AssetType } from '../../../shared/motion';
+import { type AssetType, motion } from '../../../shared/motion';
 import { useEffect, useState } from 'react';
-
-const hostname = 'https://motion.archers.world';
 
 const movieTitle = 'Continue Watching';
 
@@ -31,17 +28,17 @@ export const useContinueWatching = (options: UseContinueWatchingOptions) => {
     setLoading(() => true);
 
     try {
-      const nextEpisodeData = await axios.get<{ asset: Episode }>(`${hostname}/series/next-episode/${options.id}`);
-      const { id: episodeId, seasonId, episodeNumber } = nextEpisodeData.data.asset;
+      const nextEpisodeData = await motion.getNextEpisode({ id: options.id });
+      const { id: episodeId, seasonId, episodeNumber } = nextEpisodeData;
 
-      const seasonData = await axios.get<{ asset: Season }>(`${hostname}/series/find/season/${seasonId}`);
+      const seasonData = await motion.getSeason({ id: seasonId });
 
-      const seasonNumber = padZero(seasonData.data.asset.seasonNumber);
+      const seasonNumber = padZero(seasonData.seasonNumber);
 
       const title = `Play S${seasonNumber}E${padZero(episodeNumber)}`;
       setTitle(() => title);
       setAssetId(() => episodeId);
-    } catch (e) {
+    } catch {
       setError(() => 'Unable to get episode data');
     } finally {
       setLoading(() => false);

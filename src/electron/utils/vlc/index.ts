@@ -1,4 +1,4 @@
-import vlcAddon from '../../../../build/Release/vlc_addon.node';
+import vlcAddon from '../../../../../build/Release/vlc_addon.node';
 import type { VlcAddon } from './types';
 const Vlc = vlcAddon as VlcAddon;
 
