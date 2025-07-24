@@ -7,7 +7,7 @@ import { SeriesPage } from './pages/series/series';
 import { SeasonPage } from './pages/season/season';
 import { NotFoundPage } from './pages/not-found/not-found';
 import { SettingsPage } from './pages/settings/settings';
-// import { DownloadsPage } from './pages/downloads/downloads';
+import { DownloadsPage } from './pages/downloads/downloads';
 
 export enum RouteUrls {
   RootPage = '/',
@@ -18,7 +18,7 @@ export enum RouteUrls {
   SeasonPage = '/season/:id',
   VideoPage = '/:assetType/video/:id',
   SettingsPage = '/settings',
-  // DownloadsPage = '/downloads',
+  DownloadsPage = '/downloads',
 }
 
 export const routes = [
@@ -29,6 +29,13 @@ export const routes = [
   { path: RouteUrls.SeriesPage, element: <SeriesPage /> },
   { path: RouteUrls.SeasonPage, element: <SeasonPage /> },
   { path: RouteUrls.SettingsPage, element: <SettingsPage /> },
-  // { path: RouteUrls.DownloadsPage, element: <DownloadsPage /> },
+  { path: RouteUrls.DownloadsPage, element: <DownloadsPage /> },
   { path: '*', element: <NotFoundPage /> },
+];
+
+export const offlineRoutes = [
+  { index: true, element: <Navigate to={RouteUrls.DownloadsPage} replace /> },
+  { path: RouteUrls.SettingsPage, element: <SettingsPage /> },
+  { path: RouteUrls.DownloadsPage, element: <DownloadsPage /> },
+  { path: '*', element: <Navigate to={RouteUrls.DownloadsPage} replace /> },
 ];

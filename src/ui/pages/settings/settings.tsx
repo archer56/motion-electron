@@ -7,6 +7,7 @@ import { PanelItem } from './components/panel-item';
 import { SettingsPanel } from './constants';
 import { ServerPanel } from './panels/server';
 import { ClientPanel } from './panels/client';
+import { useIsMotionOnline } from '../../hooks/use-fetch-motion';
 
 const getPanelHash = (): SettingsPanel => {
   const pageHash = window.location.hash.replace('#', '');
@@ -14,6 +15,8 @@ const getPanelHash = (): SettingsPanel => {
 };
 
 export const SettingsPage: FC = () => {
+  useIsMotionOnline();
+
   const [currentSettingsPanel, setSettingsPanel] = useState<SettingsPanel>(getPanelHash());
 
   const handlePanelItemClick = (id: SettingsPanel) => {

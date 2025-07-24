@@ -122,3 +122,7 @@ export const useFetchVideoMetadata = (
 ): FetchReturn<UseFetchVideoMetadataResponse> => {
   return useFetch(`${hostname}/${options.assetType}/metadata/${options.id}`);
 };
+
+export const useIsMotionOnline = () => {
+  return useFetch(`${hostname}/status`);
+};

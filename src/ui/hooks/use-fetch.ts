@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useOffline } from '../context/offline-context';
 
 export type FetchReturn<T> = {
   data: T | null;
@@ -14,6 +15,7 @@ export type Options = {
 };
 
 export const useFetch = <T>(url: string, options?: Options): FetchReturn<T> => {
+  const { setOffline } = useOffline();
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -37,12 +39,14 @@ export const useFetch = <T>(url: string, options?: Options): FetchReturn<T> => {
         setData(() => data);
         setError(() => false);
         setLoading(() => false);
+        setOffline(false);
       })
       .catch((e) => {
         if (e.code !== 'ERR_CANCELED') {
           setData(() => null);
           setError(() => true);
           setLoading(() => false);
+          setOffline(true);
         }
       });
 

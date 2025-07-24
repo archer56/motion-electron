@@ -7,11 +7,13 @@ import { SearchOverlay } from './search-overlay';
 import { SearchBar } from './search-bar';
 import { CollectionSearch } from '../../collection';
 import classNames from 'classnames';
+import { useOffline } from '../../../context/offline-context';
 
 export const Nav: FC = () => {
   const location = useLocation();
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const { isOnline } = useOffline();
 
   const handleClose = () => {
     setIsSearchOpen(() => false);
@@ -41,6 +43,7 @@ export const Nav: FC = () => {
   const isSeasonPage = Boolean(useMatch(RouteUrls.SeasonPage));
   const isMovieCollectionPage = Boolean(useMatch(RouteUrls.MoviesCollectionPage));
   const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
+  const isDownloadsPage = Boolean(useMatch(RouteUrls.DownloadsPage));
   const isSettingsPage = Boolean(useMatch(RouteUrls.SettingsPage));
 
   const showBackButton = isMoviePage || isSeriesPage || isSeasonPage;
@@ -61,6 +64,10 @@ export const Nav: FC = () => {
     'nav__collection-page--active': isSeriesCollectionPage,
   });
 
+  const downloadsClassname = classNames('nav__collection-page', {
+    'nav__collection-page--active': isDownloadsPage,
+  });
+
   const settingsClassname = classNames('nav__collection-page', {
     'nav__collection-page--active': isSettingsPage,
   });
@@ -70,30 +77,41 @@ export const Nav: FC = () => {
       <nav className="nav__content">
         <div className="nav__content-left">{showBackButton && <BackButton />}</div>
         <div className="nav__content-center">
-          <Link to={RouteUrls.MoviesCollectionPage} className={moviesClassname}>
-            Movies
-          </Link>
-          <Link to={RouteUrls.SeriesCollectionPage} className={seriesClassname}>
-            Series
+          {isOnline && (
+            <>
+              <Link to={RouteUrls.MoviesCollectionPage} className={moviesClassname}>
+                Movies
+              </Link>
+              <Link to={RouteUrls.SeriesCollectionPage} className={seriesClassname}>
+                Series
+              </Link>
+            </>
+          )}
+          <Link to={RouteUrls.DownloadsPage} className={downloadsClassname}>
+            Downloads
           </Link>
           <Link to={RouteUrls.SettingsPage} className={settingsClassname}>
             Settings
           </Link>
         </div>
         <div className="nav__content-right">
-          <SearchBar isOpen={isSearchOpen} onOpenToggle={handleSearchBarClick} onChange={handleSearchChange} />
+          {isOnline && (
+            <SearchBar isOpen={isSearchOpen} onOpenToggle={handleSearchBarClick} onChange={handleSearchChange} />
+          )}
         </div>
       </nav>
-      <SearchOverlay open={isSearchOpen}>
-        {isSearchOpen && searchTerm.length > 2 ? (
-          <>
-            <CollectionSearch title="Movies" type="movies" searchTerm={searchTerm} />
-            <CollectionSearch title="Series" type="series" searchTerm={searchTerm} />
-          </>
-        ) : (
-          <p className="nav__start-searching">Start typing to search...</p>
-        )}
-      </SearchOverlay>
+      {isOnline && (
+        <SearchOverlay open={isSearchOpen}>
+          {isSearchOpen && searchTerm.length > 2 ? (
+            <>
+              <CollectionSearch title="Movies" type="movies" searchTerm={searchTerm} />
+              <CollectionSearch title="Series" type="series" searchTerm={searchTerm} />
+            </>
+          ) : (
+            <p className="nav__start-searching">Start typing to search...</p>
+          )}
+        </SearchOverlay>
+      )}
     </div>
   );
 };
