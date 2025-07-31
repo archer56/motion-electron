@@ -1,23 +1,29 @@
 import type { AssetType } from '../../../shared/motion';
 import type { DownloadMetadata } from './types';
-import { getMovie, getMovieMetadata, getSeries, getSeriesMetadata } from '../../../shared/motion/asset';
+import { motion } from '../../../shared/motion';
 
 export const getMetadata = async (id: number, assetType: AssetType): Promise<DownloadMetadata | null> => {
   try {
     if (assetType === 'movies') {
       return {
-        asset: await getMovie({ id }),
+        asset: await motion.getMovie({ id }),
         metadata: {
-          length: (await getMovieMetadata({ id })).length,
+          length: (await motion.getMovieMetadata({ id })).length,
         },
       };
     }
 
     if (assetType === 'series') {
+      const episode = await motion.getEpisode({ id });
+      const season = await motion.getSeason({ id: episode.seasonId });
+      const series = await motion.getSeries({ id: episode.seriesId });
+
       return {
-        asset: await getSeries({ id }),
+        asset: await motion.getEpisode({ id }),
+        season,
+        series,
         metadata: {
-          length: (await getSeriesMetadata({ id })).length,
+          length: 0,
         },
       };
     }

@@ -21,7 +21,7 @@ export const DownloadButton: FC<DownloadButtonProps> = (props) => {
       }
     });
 
-    window.download.isDownloaded(props.id).then((isDownloaded) => {
+    window.download.isDownloaded(props.id, props.assetType).then((isDownloaded) => {
       setDownloaded(() => isDownloaded);
     });
   }, [props.id]);
@@ -44,7 +44,7 @@ export const DownloadButton: FC<DownloadButtonProps> = (props) => {
 
   const onClickHandler = () => {
     setDownloading(() => true);
-    window.download.addDownload(props.id);
+    window.download.addDownload(props.id, props.assetType);
   };
 
   const buttonClass = classNames('download-button', {

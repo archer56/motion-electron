@@ -86,27 +86,6 @@ Napi::Value Uninitialise(const Napi::CallbackInfo& info) {
     return Napi::String::New(env, "VLC playback and window shut down");
 }
 
-// Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
-//   Napi::Env env = info.Env();
-  
-//   if(g_vlcWindow) {
-//     // SetWindowPos(
-//     //     g_vlcWindow,
-//     //     HWND_BOTTOM,  // <-- Always stay behind Electron
-//     //     0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
-//     //     SWP_NOACTIVATE | SWP_SHOWWINDOW
-//     // );
-//     SetWindowPos(
-//         g_vlcWindow,
-//         HWND_NOTOPMOST,  // not HWND_BOTTOM
-//         0, 0, GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN),
-//         SWP_NOACTIVATE | SWP_SHOWWINDOW
-//     );
-//   }
-
-//   return Napi::String::New(env, "Initializing VLC asynchronously...");
-// }
-
 Napi::Value UpdateWindowPosition(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
@@ -196,7 +175,13 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
     ShowWindow(g_vlcWindow, SW_SHOW);
   }
 
-  libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, url.c_str());
+  libvlc_media_t* media = nullptr;
+  if (url.rfind("http://", 0) == 0 || url.rfind("https://", 0) == 0) {
+    media = libvlc_media_new_location(g_vlcInstance, url.c_str());
+  } else {
+    media = libvlc_media_new_path(g_vlcInstance, url.c_str());
+  }
+  
   libvlc_media_player_set_media(g_vlcPlayer, media);
   libvlc_media_release(media);
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { config } from '../../electron/config';
-import type { AssetType, Id, Metadata, Movie, Season, Series, SeriesType } from './types';
+import type { AssetType, Episode, Id, Metadata, Movie, Season, Series, SeriesType } from './types';
 
 type GetAssetOptions = {
   id: Id;
@@ -10,7 +10,7 @@ type GetAssetOptions = {
 
 const getAsset = async <T>(options: GetAssetOptions): Promise<T> => {
   const response = await (options.seriesType
-    ? axios.get<{ asset: T }>(`${config.motion}/series/find/season/${options.id}`)
+    ? axios.get<{ asset: T }>(`${config.motion}/series/find/${options.seriesType}/${options.id}`)
     : axios.get<{ asset: T }>(`${config.motion}/${options.assetType}/find/${options.id}`));
 
   return response.data.asset;
@@ -19,6 +19,7 @@ const getAsset = async <T>(options: GetAssetOptions): Promise<T> => {
 type GetAssetMetadataOptions = {
   id: Id;
   assetType: AssetType;
+  seriesType?: SeriesType;
 };
 
 const getAssetMetadata = async (options: GetAssetMetadataOptions): Promise<Metadata> => {
@@ -57,6 +58,18 @@ export const getSeason = (options: GetSeasonOptions) => {
     id: options.id,
     assetType: 'series',
     seriesType: 'season',
+  });
+};
+
+type GetEpisodeOptions = {
+  id: Id;
+};
+
+export const getEpisode = (options: GetEpisodeOptions) => {
+  return getAsset<Episode>({
+    id: options.id,
+    assetType: 'series',
+    seriesType: 'episode',
   });
 };
 

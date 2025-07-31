@@ -58,8 +58,13 @@ Napi::Value Open(const Napi::CallbackInfo& info) {
 
     g_vlcPlayer = libvlc_media_player_new(g_vlcInstance);
 
-    // Set media from URL
-    libvlc_media_t* media = libvlc_media_new_location(g_vlcInstance, url.c_str());
+    libvlc_media_t* media = nullptr;
+    if (url.rfind("http://", 0) == 0 || url.rfind("https://", 0) == 0) {
+      media = libvlc_media_new_location(g_vlcInstance, url.c_str());
+    } else {
+      media = libvlc_media_new_path(g_vlcInstance, url.c_str());
+    }
+
     libvlc_media_player_set_media(g_vlcPlayer, media);
     libvlc_media_release(media);
 

@@ -1,11 +1,12 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { DownloadedAssetMetadata } from '../controllers/download/types';
+import type { DownloadedAssets } from '../controllers/download/types';
+import type { AssetType } from '../../shared/motion';
 
-type AddDownload = (id: number) => Promise<void>;
+type AddDownload = (id: number, assetType: AssetType) => Promise<void>;
 type GetDownloadPercentage = (id: number) => Promise<number>;
 type IsInQueue = (id: number) => Promise<boolean>;
-type IsDownloaded = (id: number) => Promise<boolean>;
-type GetDownloadedAssets = () => Promise<DownloadedAssetMetadata[]>;
+type IsDownloaded = (id: number, assetType: AssetType) => Promise<boolean>;
+type GetDownloadedAssets = () => Promise<DownloadedAssets>;
 
 declare global {
   interface Window {
@@ -20,9 +21,9 @@ declare global {
 }
 
 export const download = () => {
-  const addDownload: AddDownload = (id: number) => {
+  const addDownload: AddDownload = (id: number, assetType: AssetType) => {
     return new Promise((resolve) => {
-      ipcRenderer.send(`add-download`, id);
+      ipcRenderer.send(`add-download`, id, assetType);
       ipcRenderer.once(`add-download-reply`, (_, args) => {
         resolve(args);
       });
@@ -47,9 +48,9 @@ export const download = () => {
     });
   };
 
-  const isDownloaded: IsDownloaded = (id: number) => {
+  const isDownloaded: IsDownloaded = (id: number, assetType: AssetType) => {
     return new Promise((resolve) => {
-      ipcRenderer.send(`is-downloaded`, id);
+      ipcRenderer.send(`is-downloaded`, id, assetType);
       ipcRenderer.once(`is-downloaded-reply`, (_, args) => {
         resolve(args);
       });

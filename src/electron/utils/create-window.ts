@@ -34,12 +34,13 @@ export const createWindow: CreateWindow = (options) => {
 
   newWindow.maximize();
   newWindow.loadFile('index.html');
-
-  if (options?.openDevTools) {
-    newWindow.webContents.openDevTools({ mode: 'bottom' });
-  }
-
   newWindow.setMenu(null);
+
+  newWindow.webContents.once('did-finish-load', () => {
+    if (options?.openDevTools) {
+      newWindow.webContents.openDevTools({ mode: 'bottom' });
+    }
+  });
 
   if (isWindows()) {
     newWindow.on('focus', () => {

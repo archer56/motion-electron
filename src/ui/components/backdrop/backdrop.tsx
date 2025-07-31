@@ -24,7 +24,7 @@ export const Backdrop: FC<BackdropProps> = (props) => {
   const [removeModalOpen, setRemoveModalOpen] = useState(false);
   const continueWatching = useContinueWatching({ id: props.id, assetType: props.assetType });
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const removeAsset = async () => {
     setRemoveModalOpen(false);

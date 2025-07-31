@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // In forge.config.js (more flexible for absolute paths)
+
 const Path = require('path');
 const fs = require('fs');
 
@@ -31,7 +33,7 @@ module.exports = {
     },
   ],
   hooks: {
-    async postPackage(config) {
+    async postPackage() {
       const outputDir = Path.join(__dirname, './out');
       const outputs = fs.readdirSync(outputDir);
 

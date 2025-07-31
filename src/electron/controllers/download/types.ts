@@ -1,7 +1,9 @@
-import type { Movie, Series } from '../../../shared/motion';
+import type { Episode, Movie, Season, Series } from '../../../shared/motion';
 
 export type DownloadMetadata = {
-  asset: Movie | Series;
+  asset: Movie | Episode;
+  season?: Season;
+  series?: Series;
   metadata: {
     length: number;
   };
@@ -14,4 +16,16 @@ export type DownloadedAssetMetadata = {
   posterSrc: string;
   downloadComplete: boolean;
   length: number;
+  videoFileType: string;
+  seriesId?: number;
+  seasonId?: number;
+  episodeNumber?: number;
+  seasonNumber?: number;
+  seriesTitle?: string;
+  seasonTitle?: string;
+};
+
+export type DownloadedAssets = {
+  movies: DownloadedAssetMetadata[];
+  series: DownloadedAssetMetadata[];
 };

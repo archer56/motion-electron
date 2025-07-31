@@ -1,11 +1,12 @@
 import { ipcMain } from 'electron';
 import { DownloadManager } from './download-manager';
+import type { AssetType } from '../../../shared/motion';
 
 const downloader = new DownloadManager();
 
 export const download = () => {
-  ipcMain.on('add-download', async (event, id: number) => {
-    downloader.addToQueue(id, 'movies');
+  ipcMain.on('add-download', async (event, id: number, assetType: AssetType) => {
+    downloader.addToQueue(id, assetType);
 
     event.sender.send('add-download-reply');
   });
@@ -22,8 +23,8 @@ export const download = () => {
     event.sender.send('is-in-queue-reply', isInQueue);
   });
 
-  ipcMain.on('is-downloaded', async (event, id: number) => {
-    const isDownloaded = await downloader.isDownloaded(id);
+  ipcMain.on('is-downloaded', async (event, id: number, assetType: AssetType) => {
+    const isDownloaded = await downloader.isDownloaded(id, assetType);
 
     event.sender.send('is-downloaded-reply', isDownloaded);
   });

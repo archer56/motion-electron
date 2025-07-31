@@ -5,12 +5,20 @@ import type { CreateWindow } from '../utils/create-window';
 import { sessionStorage } from '../utils/session-storage';
 import type { OpenOptions } from '../../types/connections/vlc';
 import { motion } from '../../shared/motion';
+import { DownloadManager } from './download/download-manager';
+
+const downloader = new DownloadManager();
 
 export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
-  ipcMain.on('vlc-open', (event, options: OpenOptions) => {
+  ipcMain.on('vlc-open', async (event, options: OpenOptions) => {
     try {
-      const motionEndpoint = motion.getPlaybackUrl({ assetType: options.assetType, id: options.id });
-      Vlc.open(motionEndpoint);
+      const isDownloaded = await downloader.isDownloaded(options.id, options.assetType);
+
+      const url = isDownloaded
+        ? await downloader.getPlaybackUrl(options.id, options.assetType)
+        : motion.getPlaybackUrl({ assetType: options.assetType, id: options.id });
+
+      Vlc.open(url);
 
       sessionStorage.set('lastKnownRoute', `/${options.assetType}/video/${options.id}`);
       const win = createWindow({ transparent: true });

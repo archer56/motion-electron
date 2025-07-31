@@ -12,7 +12,7 @@ type DownloadVideoOptions = {
 };
 
 export const downloadVideo = async (options: DownloadVideoOptions) => {
-  const folderPath = getAssetDownloadPath(options.id);
+  const folderPath = getAssetDownloadPath(options.id, options.assetType);
   const filePath = Path.join(folderPath, `video.${options.fileType}`);
 
   if (fs.existsSync(filePath)) {

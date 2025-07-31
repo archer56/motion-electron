@@ -8,7 +8,6 @@ import { ProgressBar } from './component/progress-bar';
 import { PlayPauseButton } from './component/play-pause-button';
 import classNames from 'classnames';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
-import axios from 'axios';
 
 export const VideoPage: FC = () => {
   const params = useParams();
