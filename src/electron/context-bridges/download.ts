@@ -24,7 +24,7 @@ export const download = () => {
   const addDownload: AddDownload = (id: number, assetType: AssetType) => {
     return new Promise((resolve) => {
       ipcRenderer.send(`add-download`, id, assetType);
-      ipcRenderer.once(`add-download-reply`, (_, args) => {
+      ipcRenderer.once(`add-download-reply-${id}`, (_, args) => {
         resolve(args);
       });
     });
@@ -33,7 +33,7 @@ export const download = () => {
   const getDownloadPercentage: GetDownloadPercentage = (id: number) => {
     return new Promise((resolve) => {
       ipcRenderer.send(`get-download-percentage`, id);
-      ipcRenderer.once(`get-download-percentage-reply`, (_, args) => {
+      ipcRenderer.once(`get-download-percentage-reply-${id}`, (_, args) => {
         resolve(args);
       });
     });
@@ -42,16 +42,17 @@ export const download = () => {
   const isInQueue: IsInQueue = (id: number) => {
     return new Promise((resolve) => {
       ipcRenderer.send(`is-in-queue`, id);
-      ipcRenderer.once(`is-in-queue-reply`, (_, args) => {
+      ipcRenderer.once(`is-in-queue-reply-${id}`, (_, args) => {
         resolve(args);
       });
     });
   };
 
   const isDownloaded: IsDownloaded = (id: number, assetType: AssetType) => {
+    console.log('checking download');
     return new Promise((resolve) => {
       ipcRenderer.send(`is-downloaded`, id, assetType);
-      ipcRenderer.once(`is-downloaded-reply`, (_, args) => {
+      ipcRenderer.once(`is-downloaded-reply-${id}`, (_, args) => {
         resolve(args);
       });
     });

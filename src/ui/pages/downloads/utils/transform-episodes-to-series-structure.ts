@@ -6,8 +6,23 @@ export type DownloadedSeries = {
   seasons: {
     title: string;
     seasonId: number;
+    seasonNumber: number;
     episodes: Omit<DownloadedAssetMetadata, 'seriesId' | 'seasonId'>[];
   }[];
+};
+
+const sortSeries = (series: DownloadedSeries[]): DownloadedSeries[] => {
+  return series.map((currSeries) => {
+    const seasons = currSeries.seasons
+      .map((currSeason) => {
+        const episodes = currSeason.episodes.sort((a, b) => (a?.episodeNumber ?? 0) - (b?.episodeNumber ?? 0));
+
+        return { ...currSeason, episodes };
+      })
+      .sort((a, b) => (a?.seasonNumber ?? 0) - (b?.seasonNumber ?? 0));
+
+    return { ...currSeries, seasons };
+  });
 };
 
 export const transformEpisodesToSeriesStructure = (episodes: DownloadedAssetMetadata[]): DownloadedSeries[] => {
@@ -30,6 +45,7 @@ export const transformEpisodesToSeriesStructure = (episodes: DownloadedAssetMeta
       season = {
         seasonId,
         title: seasonTitle,
+        seasonNumber: episodeData.seasonNumber ?? 0,
         episodes: [],
       };
       acc[seriesId].seasons.push(season);
@@ -42,5 +58,5 @@ export const transformEpisodesToSeriesStructure = (episodes: DownloadedAssetMeta
     return acc;
   }, {});
 
-  return Object.values(series);
+  return sortSeries(Object.values(series));
 };

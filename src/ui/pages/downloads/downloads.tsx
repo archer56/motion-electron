@@ -50,7 +50,8 @@ export const DownloadsPage: FC = () => {
                         {season.episodes.map((episode) => {
                           return (
                             <li key={episode.id}>
-                              {episode.title} <PlayVideoButton id={episode.id} assetType="series" text={'play'} />
+                              S{episode.seasonNumber}E{episode.episodeNumber} - {episode.title}{' '}
+                              <PlayVideoButton id={episode.id} assetType="series" text={'play'} />
                             </li>
                           );
                         })}
