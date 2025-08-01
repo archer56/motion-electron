@@ -46,7 +46,12 @@ export const useFetch = <T>(url: string, options?: Options): FetchReturn<T> => {
           setData(() => null);
           setError(() => true);
           setLoading(() => false);
-          setOffline(true);
+
+          if (!e.response) {
+            setOffline(true);
+          } else {
+            setOffline(false);
+          }
         }
       });
 

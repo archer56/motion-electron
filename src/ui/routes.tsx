@@ -8,11 +8,13 @@ import { SeasonPage } from './pages/season/season';
 import { NotFoundPage } from './pages/not-found/not-found';
 import { SettingsPage } from './pages/settings/settings';
 import { DownloadsPage } from './pages/downloads/downloads';
+import { MoviesAllPage } from './pages/movies-all/movies-all';
 
 export enum RouteUrls {
   RootPage = '/',
   MoviesCollectionPage = '/movies',
   MoviesPage = '/movies/:id',
+  MoviesAllPage = '/movies/all/:collection',
   SeriesCollectionPage = '/series',
   SeriesPage = '/series/:id',
   SeasonPage = '/season/:id',
@@ -25,6 +27,7 @@ export const routes = [
   { index: true, element: <Navigate to={RouteUrls.MoviesCollectionPage} /> },
   { path: RouteUrls.MoviesCollectionPage, element: <MoviesCollectionsPage /> },
   { path: RouteUrls.MoviesPage, element: <MoviesPage /> },
+  { path: RouteUrls.MoviesAllPage, element: <MoviesAllPage /> },
   { path: RouteUrls.SeriesCollectionPage, element: <SeriesCollectionsPage /> },
   { path: RouteUrls.SeriesPage, element: <SeriesPage /> },
   { path: RouteUrls.SeasonPage, element: <SeasonPage /> },

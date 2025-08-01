@@ -25,7 +25,7 @@ export const CollectionGenre: FC<CollectionGenreProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} />;
+  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
 };
 
 export const CollectionRecentlyAdded: FC<BaseCollectionProps> = (props) => {
@@ -38,7 +38,7 @@ export const CollectionRecentlyAdded: FC<BaseCollectionProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} />;
+  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
 };
 
 export const CollectionContinueWatching: FC<BaseCollectionProps> = (props) => {
@@ -51,7 +51,7 @@ export const CollectionContinueWatching: FC<BaseCollectionProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} />;
+  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
 };
 
 type CollectionSearchProps = BaseCollectionProps & {
@@ -69,5 +69,5 @@ export const CollectionSearch: FC<CollectionSearchProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} />;
+  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
 };

@@ -5,7 +5,7 @@ import { CollectionContinueWatching, CollectionGenre, CollectionRecentlyAdded } 
 export const MoviesCollectionsPage: FC = () => {
   return (
     <div className="movies-collections">
-      <CollectionContinueWatching title="Continue Watching" type="movies" />
+      <CollectionContinueWatching title="Continue Watching" type="movies" showAllCard />
       <CollectionRecentlyAdded title="Recently Added" type="movies" />
       <CollectionGenre title="Comedy" type="movies" genre="comedy" />
       <CollectionGenre title="Action" type="movies" genre="action" />

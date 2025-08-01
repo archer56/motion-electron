@@ -4,10 +4,14 @@ import { AssetCard } from './asset-card';
 
 import type { BaseCollectionProps } from './types';
 import type { Movie, Season, Series } from '../../../shared/motion';
+import { Link } from 'react-router-dom';
+import { PosterImage } from '../poster-image/poster-image';
+import { HiOutlineArrowSmallRight } from 'react-icons/hi2';
 
 type CollectionProps = BaseCollectionProps & {
   type: 'movies' | 'series' | 'seasons';
   assets: Movie[] | Series[] | Season[];
+  showAllCard?: boolean;
 };
 
 export const Collection: FC<CollectionProps> = (props) => {
@@ -36,7 +40,14 @@ export const Collection: FC<CollectionProps> = (props) => {
   return (
     <div className="collection">
       {props.title && <h2 className="collection__title">{props.title}</h2>}
-      <ul className="collection__assets">{assets}</ul>
+      <ul className="collection__assets">
+        {assets}
+        {props.showAllCard && (
+          <Link to={'/movies/all/comedy'}>
+            <PosterImage icon={<HiOutlineArrowSmallRight />} direction="portrait" />
+          </Link>
+        )}
+      </ul>
     </div>
   );
 };
