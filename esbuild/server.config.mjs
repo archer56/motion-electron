@@ -7,13 +7,16 @@ import { copyFilesPlugin } from './utils/copy-files-plugin.mjs';
 import { isWindows } from './utils/is-windows.mjs';
 import Path from 'path';
 
+const isProd = isProduction();
+const isDev = !isProduction();
+
 const ctx = await esbuild.context({
   platform: 'node',
   format: 'cjs',
   entryPoints: ['./src/electron/**/*.ts', './src/shared/**/*.ts'],
   outdir: './dist/electron',
-  minify: isProduction(),
-  sourcemap: !isProduction(),
+  minify: isProd,
+  sourcemap: isDev,
   plugins: [
     copyFilesPlugin(
       [
@@ -29,12 +32,15 @@ const ctx = await esbuild.context({
         },
       ].filter((plugin) => plugin),
     ),
-    rebuildNotifyPlugin(),
-    startServerPlugin(),
+    ...(isDev ? [rebuildNotifyPlugin(), startServerPlugin()] : []),
   ],
   tsconfig: Path.resolve('./src/electron/tsconfig.json'),
 });
 
-ctx.watch();
-
-console.log('Watching...');
+if (isDev) {
+  ctx.watch();
+  console.log('Watching...');
+} else {
+  await ctx.rebuild();
+  process.exit(0);
+}

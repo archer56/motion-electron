@@ -5,13 +5,16 @@ import { isProduction } from './utils/is-production.mjs';
 import { rebuildNotifyPlugin } from './utils/rebuild-notify-plugin.mjs';
 import { lessLoader } from 'esbuild-plugin-less';
 
+const isProd = isProduction();
+const isDev = !isProduction();
+
 const ctx = await esbuild.context({
   platform: 'browser',
   entryPoints: ['./src/ui/index.tsx'],
   bundle: true,
   outdir: './dist/ui',
-  minify: isProduction(),
-  sourcemap: !isProduction(),
+  minify: isProd,
+  sourcemap: isDev,
   plugins: [
     copyFilesPlugin([
       {
@@ -28,10 +31,14 @@ const ctx = await esbuild.context({
       },
     ]),
     lessLoader(),
-    rebuildNotifyPlugin(),
+    ...(isDev ? [rebuildNotifyPlugin()] : []),
   ],
 });
 
-ctx.watch();
-
-console.log('Watching...');
+if (isDev) {
+  ctx.watch();
+  console.log('Watching...');
+} else {
+  await ctx.rebuild();
+  process.exit(0);
+}
