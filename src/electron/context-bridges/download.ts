@@ -49,7 +49,6 @@ export const download = () => {
   };
 
   const isDownloaded: IsDownloaded = (id: number, assetType: AssetType) => {
-    console.log('checking download');
     return new Promise((resolve) => {
       ipcRenderer.send(`is-downloaded`, id, assetType);
       ipcRenderer.once(`is-downloaded-reply-${id}`, (_, args) => {

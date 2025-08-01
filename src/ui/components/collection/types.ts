@@ -1,5 +1,6 @@
+import type { AssetType } from '../../../shared/motion';
+
 export type BaseCollectionProps = {
   title?: string;
-  type: 'movies' | 'series' | 'seasons';
-  showAllCard?: boolean;
+  assetType: AssetType;
 };

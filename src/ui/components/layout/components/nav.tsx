@@ -45,8 +45,9 @@ export const Nav: FC = () => {
   const isSeriesCollectionPage = Boolean(useMatch(RouteUrls.SeriesCollectionPage));
   const isDownloadsPage = Boolean(useMatch(RouteUrls.DownloadsPage));
   const isSettingsPage = Boolean(useMatch(RouteUrls.SettingsPage));
+  const isInfiniteScrollPage = Boolean(useMatch(RouteUrls.InfiniteScroll));
 
-  const showBackButton = isMoviePage || isSeriesPage || isSeasonPage;
+  const showBackButton = isMoviePage || isSeriesPage || isSeasonPage || isInfiniteScrollPage;
 
   const handleSearchBarClick = () => {
     setIsSearchOpen((prevIsOpen) => !prevIsOpen);
@@ -104,8 +105,8 @@ export const Nav: FC = () => {
         <SearchOverlay open={isSearchOpen}>
           {isSearchOpen && searchTerm.length > 2 ? (
             <>
-              <CollectionSearch title="Movies" type="movies" searchTerm={searchTerm} />
-              <CollectionSearch title="Series" type="series" searchTerm={searchTerm} />
+              <CollectionSearch title="Movies" assetType="movies" searchTerm={searchTerm} />
+              <CollectionSearch title="Series" assetType="series" searchTerm={searchTerm} />
             </>
           ) : (
             <p className="nav__start-searching">Start typing to search...</p>

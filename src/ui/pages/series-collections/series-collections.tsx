@@ -5,10 +5,10 @@ import { CollectionContinueWatching, CollectionGenre, CollectionRecentlyAdded } 
 export const SeriesCollectionsPage: FC = () => {
   return (
     <div className="series-collections">
-      <CollectionContinueWatching title="Continue Watching" type="series" />
-      <CollectionRecentlyAdded title="Recently Added" type="series" />
-      <CollectionGenre title="Action" type="series" genre="action" />
-      <CollectionGenre title="Comedy" type="series" genre="comedy" />
+      <CollectionContinueWatching title="Continue Watching" assetType="series" />
+      <CollectionRecentlyAdded title="Recently Added" assetType="series" />
+      <CollectionGenre title="Action" assetType="series" genre="action" />
+      <CollectionGenre title="Comedy" assetType="series" genre="comedy" />
     </div>
   );
 };

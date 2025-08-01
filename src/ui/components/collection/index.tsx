@@ -10,13 +10,18 @@ import {
 import type { BaseCollectionProps } from './types';
 import type { allowedGenres } from '../../../shared/motion';
 
-type CollectionGenreProps = BaseCollectionProps & {
+type CollectionProps = BaseCollectionProps & {
+  showAllCard?: boolean;
+};
+
+type CollectionGenreProps = CollectionProps & {
   genre: (typeof allowedGenres)[number];
+  showAllCard?: boolean;
 };
 
 export const CollectionGenre: FC<CollectionGenreProps> = (props) => {
   const { loading, data, error } = useFetchAssetsByGenre({
-    assetType: props.type,
+    assetType: props.assetType,
     genre: props.genre,
     limit: 15,
   });
@@ -25,12 +30,16 @@ export const CollectionGenre: FC<CollectionGenreProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
+  const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/${props.genre}` : '';
+
+  return (
+    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+  );
 };
 
-export const CollectionRecentlyAdded: FC<BaseCollectionProps> = (props) => {
+export const CollectionRecentlyAdded: FC<CollectionProps> = (props) => {
   const { loading, data, error } = useFetchAssetsByRecentlyAdded({
-    assetType: props.type,
+    assetType: props.assetType,
     limit: 15,
   });
 
@@ -38,12 +47,16 @@ export const CollectionRecentlyAdded: FC<BaseCollectionProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
+  const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/recently-added` : '';
+
+  return (
+    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+  );
 };
 
-export const CollectionContinueWatching: FC<BaseCollectionProps> = (props) => {
+export const CollectionContinueWatching: FC<CollectionProps> = (props) => {
   const { loading, data, error } = useFetchAssetsByContinueWatching({
-    assetType: props.type,
+    assetType: props.assetType,
     limit: 15,
   });
 
@@ -51,7 +64,11 @@ export const CollectionContinueWatching: FC<BaseCollectionProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
+  const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/continue-watching` : '';
+
+  return (
+    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+  );
 };
 
 type CollectionSearchProps = BaseCollectionProps & {
@@ -60,7 +77,7 @@ type CollectionSearchProps = BaseCollectionProps & {
 
 export const CollectionSearch: FC<CollectionSearchProps> = (props) => {
   const { loading, data, error } = useFetchAssets({
-    assetType: props.type,
+    assetType: props.assetType,
     limit: 5,
     search: props.searchTerm,
   });
@@ -69,5 +86,5 @@ export const CollectionSearch: FC<CollectionSearchProps> = (props) => {
     return null;
   }
 
-  return <Collection title={props.title} type={props.type} assets={data.assets} showAllCard={props.showAllCard} />;
+  return <Collection title={props.title} assetType={props.assetType} assets={data.assets} />;
 };

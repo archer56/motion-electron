@@ -36,7 +36,7 @@ export const SeriesPage: FC = () => {
         assetType="series"
       />
       <div className="series__season-rail">
-        <Collection assets={asset?.seasons ?? []} type="seasons" />
+        <Collection assets={asset?.seasons ?? []} assetType="series" />
       </div>
     </div>
   );
