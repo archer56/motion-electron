@@ -8,6 +8,7 @@ import { ProgressBar } from './component/progress-bar';
 import { PlayPauseButton } from './component/play-pause-button';
 import classNames from 'classnames';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
+import { LoadingSpinner } from '../../components/loading-spinner/loading-spinner';
 
 export const VideoPage: FC = () => {
   const params = useParams();
@@ -166,15 +167,6 @@ export const VideoPage: FC = () => {
     window.vlc.close();
   };
 
-  if (playbackStatus === 'opening' || playbackStatus === 'buffering' || playbackStatus === 'idle') {
-    return (
-      <div className="video-player">
-        <BackButton />
-        <span>BUFFERING</span>
-      </div>
-    );
-  }
-
   if (
     playbackStatus === 'ended' ||
     playbackStatus === 'error' ||
@@ -196,17 +188,27 @@ export const VideoPage: FC = () => {
     }
   };
 
+  const isLoading = playbackStatus === 'opening' || playbackStatus === 'buffering' || playbackStatus === 'idle';
+
   const videoPlayerClass = classNames('video-player', {
-    'video-player--hidden': overlayHidden,
+    'video-player--hidden': overlayHidden && !isLoading,
+    'video-player--loading': isLoading,
   });
 
   return (
     <div className={videoPlayerClass}>
-      <BackButton onClick={handleClose} />
-      <h1 className="video-player__title">{asset?.data?.asset?.title}</h1>
-      <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
-        <PlayPauseButton isPaused={playbackStatus === 'paused'} onPauseUpdate={onPauseUpdate} />
-      </ProgressBar>
+      {isLoading && <LoadingSpinner />}
+      <div className="video-player__header">
+        <BackButton onClick={handleClose} />
+      </div>
+      <div className="video-player__content">
+        <h1 className="video-player__title">{asset?.data?.asset?.title}</h1>
+      </div>
+      <div className="video-player__footer">
+        <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
+          <PlayPauseButton isPaused={playbackStatus === 'paused'} onPauseUpdate={onPauseUpdate} />
+        </ProgressBar>
+      </div>
     </div>
   );
 };

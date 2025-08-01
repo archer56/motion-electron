@@ -2,6 +2,7 @@ import React from 'react';
 import type { FC } from 'react';
 import type { Movie, Season, Series } from '../../../shared/motion';
 import { Link } from 'react-router-dom';
+import { PosterImage } from '../poster-image/poster-image';
 
 type AssetCardProps =
   | {
@@ -21,7 +22,7 @@ type AssetCardProps =
     };
 
 export const AssetCard: FC<AssetCardProps> = (props) => {
-  const posterSrc = props.asset.posterSrc?.replace('original', 'w200');
+  const posterSrc = props.asset.posterSrc?.replace('original', 'w200') ?? '';
   const to = `/${props.type}/${props.asset.id}`;
   const title = props.asset.title;
 
@@ -29,7 +30,7 @@ export const AssetCard: FC<AssetCardProps> = (props) => {
     <li className="asset-card">
       <div className="asset-card__image-container">
         <Link to={to}>
-          <img className="asset-card__image" src={posterSrc} alt={title} />
+          <PosterImage src={posterSrc} direction="portrait" alt={title} />
         </Link>
       </div>
       {props.includeTitle && title && <p className="asset-card__title">{title}</p>}

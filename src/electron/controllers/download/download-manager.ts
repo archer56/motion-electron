@@ -7,6 +7,7 @@ import { setMetadataFile } from './set-metadata-file';
 import Path from 'path';
 import type { DownloadedAssets } from './types';
 import { getAssetDownloadPath } from './get-asset-download-path';
+import { downloadImage } from './download-image';
 
 type QueueItem = {
   id: number;
@@ -39,7 +40,13 @@ export class DownloadManager {
       }
 
       const fileType = Path.extname(metadata.asset.videoSrc).replace('.', '');
-      await setMetadataFile(asset.id, asset.assetType, metadata, fileType, false);
+      await setMetadataFile({
+        id: asset.id,
+        assetType: asset.assetType,
+        metadata: metadata,
+        videoFileType: fileType,
+        downloadComplete: false,
+      });
 
       await downloadVideo({
         id: asset.id,
@@ -50,7 +57,31 @@ export class DownloadManager {
         },
       });
 
-      await setMetadataFile(asset.id, asset.assetType, metadata, fileType, true);
+      const posterSrc = await downloadImage({
+        id: asset.id,
+        assetType: asset.assetType,
+        url: metadata.asset.posterSrc,
+        name: 'poster',
+      });
+
+      const seriesPosterSrc =
+        metadata.series &&
+        (await downloadImage({
+          id: asset.id,
+          assetType: asset.assetType,
+          url: metadata.series.posterSrc,
+          name: 'series-poster',
+        }));
+
+      await setMetadataFile({
+        id: asset.id,
+        assetType: asset.assetType,
+        metadata: metadata,
+        videoFileType: fileType,
+        posterSrc,
+        seriesPosterSrc,
+        downloadComplete: true,
+      });
     } catch (e) {
       console.error('Something went wrong downloading', e);
     } finally {

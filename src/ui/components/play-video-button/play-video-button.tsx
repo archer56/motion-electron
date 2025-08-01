@@ -1,7 +1,8 @@
-import type { FC, PropsWithChildren } from 'react';
+import type { FC } from 'react';
 import React from 'react';
 import type { AssetType } from '../../../shared/motion';
 import { FaPlay } from 'react-icons/fa';
+import { PosterImage } from '../poster-image/poster-image';
 
 type PlayVideoButton =
   | {
@@ -9,11 +10,11 @@ type PlayVideoButton =
       text: string;
       assetType: AssetType;
     }
-  | PropsWithChildren<{
+  | {
       id: number;
-      icon: true;
+      posterSrc: string;
       assetType: AssetType;
-    }>;
+    };
 
 export const PlayVideoButton: FC<PlayVideoButton> = (props) => {
   const handleOnClick = () => {
@@ -23,20 +24,22 @@ export const PlayVideoButton: FC<PlayVideoButton> = (props) => {
     });
   };
 
-  if ('text' in props) {
+  if ('posterSrc' in props) {
+    const posterDirection = props.assetType === 'movies' ? 'portrait' : 'landscape';
+
     return (
-      <button className="play-video play-video--button" onClick={handleOnClick}>
-        {props.text}
+      <button className="play-video play-video--icon" onClick={handleOnClick}>
+        <PosterImage src={props.posterSrc} direction={posterDirection} />
+        <div className=" play-video--icon-container">
+          <FaPlay />
+        </div>
       </button>
     );
   }
 
   return (
-    <button className="play-video play-video--icon" onClick={handleOnClick}>
-      {props.children}
-      <div className=" play-video--icon-container">
-        <FaPlay />
-      </div>
+    <button className="play-video play-video--button" onClick={handleOnClick}>
+      {props?.text}
     </button>
   );
 };

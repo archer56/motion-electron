@@ -3,3 +3,58 @@
   overflow-y: auto;
   scrollbar-width: none;
 }
+
+.downloads__movie-list {
+  list-style: none;
+}
+
+.downloads__series-list {
+  list-style: none;
+}
+
+.downloads__season-list {
+  list-style: none;
+  width: 100%;
+}
+
+.downloads__episode-list {
+  list-style: none;
+  padding: 0;
+}
+
+.downloads__season-title {
+  font-size: 25px;
+}
+
+.downloads__item {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.downloads__item--series {
+  cursor: pointer;
+}
+
+.downloads__item-meta {
+  margin: 0 10px;
+  width: 60%;            
+}
+
+.downloads__item-title {
+  display: -webkit-box;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 25px;
+  margin: 0;
+}
+
+.downloads__item-description {
+  display: -webkit-box;
+  -webkit-line-clamp: 6;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 15px;
+  margin: 0;
+}

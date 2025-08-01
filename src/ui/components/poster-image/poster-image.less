@@ -1,0 +1,31 @@
+@poster-image-landscape-poster-width: 275px;
+@poster-image-landscape-poster-height: @poster-image-landscape-poster-width * 0.5;
+
+@poster-image-portrait-poster-width: 150px;
+@poster-image-portrait-poster-height: @poster-image-portrait-poster-width * 1.5;
+
+.poster-image__container {
+  position: relative;
+  background: @color-grey8;
+  border-radius: @border-radius;
+  overflow: hidden;
+}
+
+.poster-image__container--landscape {
+  width: @poster-image-landscape-poster-width;
+  height: @poster-image-landscape-poster-height;
+}
+
+.poster-image__container--portrait {
+  width: @poster-image-portrait-poster-width;
+  height: @poster-image-portrait-poster-height;
+}
+
+
+.poster-image__poster {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  transform: translateY(-50%);
+  width: 100%;
+}

@@ -13,11 +13,7 @@ export const EpisodeItem: FC<EpisodeProps> = (props) => {
 
   return (
     <div className="episode-item">
-      <PlayVideoButton id={id} assetType="series" icon>
-        <div className="episode-item__poster-container">
-          <img src={posterSrc} className="episode-item__poster" />
-        </div>
-      </PlayVideoButton>
+      <PlayVideoButton id={id} assetType="series" posterSrc={posterSrc} />
       <div className="episode-item__meta">
         <p className="episode-item__title">{title}</p>
         <p className="episode-item__description">{description}</p>

@@ -29,7 +29,8 @@ export const getMetadata = async (id: number, assetType: AssetType): Promise<Dow
     }
 
     return null;
-  } catch {
+  } catch (e) {
+    console.log(`Unable to get metadata - ${e}`);
     return null;
   }
 };

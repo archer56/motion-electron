@@ -3,14 +3,28 @@
 @import './component/play-pause-button.less';
 
 .video-player {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
   height: 100vh;
   width: 100vw;
   padding: 10px;
   box-sizing: border-box;
   transition: 1s opacity;
+}
+
+.video-player__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+
+.video-player--loading {
+  background: @color-black;
+  
+  .video-player__footer {
+    visibility: hidden;
+  }
 }
 
 .video-player--hidden {

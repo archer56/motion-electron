@@ -14,6 +14,7 @@ export type DownloadedAssetMetadata = {
   title: string;
   description: string;
   posterSrc: string;
+  seriesPosterSrc?: string;
   downloadComplete: boolean;
   length: number;
   videoFileType: string;

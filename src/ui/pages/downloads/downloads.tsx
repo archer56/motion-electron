@@ -5,6 +5,8 @@ import type { DownloadedAssetMetadata } from '../../../electron/controllers/down
 import type { DownloadedSeries } from './utils/transform-episodes-to-series-structure';
 import { transformEpisodesToSeriesStructure } from './utils/transform-episodes-to-series-structure';
 import { PlayVideoButton } from '../../components/play-video-button/play-video-button';
+import { PosterImage } from '../../components/poster-image/poster-image';
+import { getEpisodeNumber } from './utils/get-episode-number';
 
 export const DownloadsPage: FC = () => {
   useIsMotionOnline();
@@ -16,6 +18,8 @@ export const DownloadsPage: FC = () => {
     series: [],
   });
 
+  const [seriesExpanded, setSeriesExpanded] = useState<number | null>();
+
   useEffect(() => {
     window.download.getDownloadedAssets().then((downloadedAssets) => {
       setDownloads({
@@ -25,40 +29,62 @@ export const DownloadsPage: FC = () => {
     });
   }, []);
 
+  const handleSeriesClick = (seriesId: number) => () => {
+    setSeriesExpanded((prevSeriesId) => (prevSeriesId === seriesId ? null : seriesId));
+  };
+
   return (
     <div className="downloads">
-      <p>Movies</p>
-      <ul>
+      <ul className="downloads__movie-list">
         {downloads.movies.map((movie) => (
-          <li key={movie.id}>
-            {movie.title} <PlayVideoButton id={movie.id} assetType="movies" text={'play'} />
+          <li key={movie.id} className="downloads__item">
+            <PlayVideoButton id={movie.id} assetType="movies" posterSrc={movie.posterSrc} />
+            <div className="downloads__item-meta">
+              <p className="downloads__item-title">{movie.title}</p>
+              <p className="downloads__item-description">{movie.description}</p>
+            </div>
           </li>
         ))}
       </ul>
-      <p>Series</p>
-      <ul>
+
+      <ul className="downloads__series-list">
         {downloads.series.map((series) => {
           return (
             <li key={series.seriesId}>
-              <p>{series.title}</p>
-              <ul>
-                {series.seasons.map((season) => {
-                  return (
-                    <li key={season.seasonId}>
-                      <p>{season.title}</p>
-                      <ul>
-                        {season.episodes.map((episode) => {
-                          return (
-                            <li key={episode.id}>
-                              S{episode.seasonNumber}E{episode.episodeNumber} - {episode.title}{' '}
-                              <PlayVideoButton id={episode.id} assetType="series" text={'play'} />
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </li>
-                  );
-                })}
+              <div className="downloads__item downloads__item--series" onClick={handleSeriesClick(series.seriesId)}>
+                <PosterImage src={series?.posterSrc} direction="portrait" />
+                <div className="downloads__item-meta">
+                  <p className="downloads__item-title">{series.title}</p>
+                </div>
+              </div>
+              <ul className="downloads__season-list">
+                {seriesExpanded === series.seriesId &&
+                  series.seasons.map((season) => {
+                    return (
+                      <li key={season.seasonId}>
+                        <p className="downloads__season-title">{season.title}</p>
+                        <ul className="downloads__episode-list">
+                          {season.episodes.map((episode) => {
+                            const episodeNumber = getEpisodeNumber(
+                              episode.seasonNumber ?? 0,
+                              episode.episodeNumber ?? 0,
+                            );
+                            return (
+                              <li key={episode.id} className="downloads__item">
+                                <PlayVideoButton id={episode.id} assetType="series" posterSrc={episode.posterSrc} />
+                                <div className="downloads__item-meta">
+                                  <p className="downloads__item-title">
+                                    {episodeNumber} - {episode.title}
+                                  </p>
+                                  <p className="downloads__item-description">{episode.description}</p>
+                                </div>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </li>
+                    );
+                  })}
               </ul>
             </li>
           );

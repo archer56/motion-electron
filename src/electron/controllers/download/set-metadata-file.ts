@@ -4,35 +4,39 @@ import fs from 'fs/promises';
 import { getAssetDownloadPath } from './get-asset-download-path';
 import type { AssetType } from '../../../shared/motion';
 
-export const setMetadataFile = async (
-  id: number,
-  assetType: AssetType,
-  metadata: DownloadMetadata,
-  videoFileType: string,
-  downloadComplete: boolean,
-) => {
+type SetMetadataFile = {
+  id: number;
+  assetType: AssetType;
+  metadata: DownloadMetadata;
+  videoFileType: string;
+  downloadComplete: boolean;
+  posterSrc?: string;
+  seriesPosterSrc?: string;
+};
+export const setMetadataFile = async (options: SetMetadataFile) => {
   const dataToSave: DownloadedAssetMetadata = {
-    id: metadata.asset.id,
-    title: metadata.asset.title ?? '',
-    description: metadata.asset.description ?? '',
-    posterSrc: metadata.asset.posterSrc ?? '',
-    length: metadata.metadata.length,
-    videoFileType,
-    downloadComplete,
+    id: options.metadata.asset.id,
+    title: options.metadata.asset.title ?? '',
+    description: options.metadata.asset.description ?? '',
+    posterSrc: options?.posterSrc ?? options.metadata.asset.posterSrc ?? '',
+    seriesPosterSrc: options?.seriesPosterSrc ?? '',
+    length: options.metadata.metadata.length,
+    videoFileType: options.videoFileType,
+    downloadComplete: options.downloadComplete,
   };
 
-  if (assetType === 'series') {
-    if ('seriesId' in metadata.asset) {
-      dataToSave.seriesId = metadata.asset.seriesId;
-      dataToSave.seasonId = metadata.asset.seasonId;
-      dataToSave.episodeNumber = metadata.asset?.episodeNumber;
-      dataToSave.seasonNumber = metadata.season?.seasonNumber;
-      dataToSave.seriesTitle = metadata.series?.title;
-      dataToSave.seasonTitle = metadata.season?.title;
+  if (options.assetType === 'series') {
+    if ('seriesId' in options.metadata.asset) {
+      dataToSave.seriesId = options.metadata.asset.seriesId;
+      dataToSave.seasonId = options.metadata.asset.seasonId;
+      dataToSave.episodeNumber = options.metadata.asset?.episodeNumber;
+      dataToSave.seasonNumber = options.metadata.season?.seasonNumber;
+      dataToSave.seriesTitle = options.metadata.series?.title;
+      dataToSave.seasonTitle = options.metadata.season?.title;
     }
   }
 
-  const folderPath = getAssetDownloadPath(id, assetType);
+  const folderPath = getAssetDownloadPath(options.id, options.assetType);
 
   await fs.mkdir(folderPath, { recursive: true });
 

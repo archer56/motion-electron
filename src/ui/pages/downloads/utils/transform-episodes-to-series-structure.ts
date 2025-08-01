@@ -3,6 +3,7 @@ import type { DownloadedAssetMetadata } from '../../../../electron/controllers/d
 export type DownloadedSeries = {
   title: string;
   seriesId: number;
+  posterSrc: string;
   seasons: {
     title: string;
     seasonId: number;
@@ -36,6 +37,7 @@ export const transformEpisodesToSeriesStructure = (episodes: DownloadedAssetMeta
       acc[seriesId] = {
         title: seriesTitle,
         seriesId: seriesId,
+        posterSrc: episodeData?.seriesPosterSrc ?? '',
         seasons: [],
       };
     }
