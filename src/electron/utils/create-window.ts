@@ -30,6 +30,7 @@ export const createWindow: CreateWindow = (options) => {
       additionalArguments: [`--last-known-route=${lastKnownRoute}`],
     },
     icon: Path.join(__dirname, '../assets/icons/png/icon-256x256.png'),
+    backgroundColor: '#262626',
   });
 
   newWindow.maximize();
