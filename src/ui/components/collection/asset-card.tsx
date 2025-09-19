@@ -9,29 +9,36 @@ type AssetCardProps =
       asset: Movie;
       type: 'movies';
       includeTitle?: boolean;
+      disableLink?: boolean;
     }
   | {
       asset: Series;
       type: 'series';
       includeTitle?: boolean;
+      disableLink?: boolean;
     }
   | {
       asset: Season;
       type: 'season';
       includeTitle?: boolean;
+      disableLink?: boolean;
     };
 
 export const AssetCard: FC<AssetCardProps> = (props) => {
-  const posterSrc = props.asset.posterSrc?.replace('original', 'w200') ?? '';
+  const posterSrc = props.asset.posterSrc?.replace('original', 'w200') ?? undefined;
   const to = `/${props.type}/${props.asset.id}`;
   const title = props.asset.title;
 
   return (
     <li className="asset-card">
       <div className="asset-card__image-container">
-        <Link to={to}>
+        {props?.disableLink ? (
           <PosterImage src={posterSrc} direction="portrait" alt={title} />
-        </Link>
+        ) : (
+          <Link to={to}>
+            <PosterImage src={posterSrc} direction="portrait" alt={title} />
+          </Link>
+        )}
       </div>
       {props.includeTitle && title && <p className="asset-card__title">{title}</p>}
     </li>

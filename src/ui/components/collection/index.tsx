@@ -26,14 +26,20 @@ export const CollectionGenre: FC<CollectionGenreProps> = (props) => {
     limit: 15,
   });
 
-  if (error || loading || !data?.assets) {
+  if (error || (!data?.assets && !loading)) {
     return null;
   }
 
   const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/${props.genre}` : '';
 
   return (
-    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+    <Collection
+      title={props.title}
+      assetType={props.assetType}
+      assets={data?.assets ?? []}
+      showAllCardUrl={showAllCardUrl}
+      loading={loading}
+    />
   );
 };
 
@@ -43,14 +49,20 @@ export const CollectionRecentlyAdded: FC<CollectionProps> = (props) => {
     limit: 15,
   });
 
-  if (error || loading || !data?.assets) {
+  if (error || (!data?.assets && !loading)) {
     return null;
   }
 
   const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/recently-added` : '';
 
   return (
-    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+    <Collection
+      title={props.title}
+      assetType={props.assetType}
+      assets={data?.assets ?? []}
+      showAllCardUrl={showAllCardUrl}
+      loading={loading}
+    />
   );
 };
 
@@ -60,14 +72,20 @@ export const CollectionContinueWatching: FC<CollectionProps> = (props) => {
     limit: 15,
   });
 
-  if (error || loading || !data?.assets) {
+  if (error || (!data?.assets && !loading)) {
     return null;
   }
 
   const showAllCardUrl = props.showAllCard ? `/infinite-scroll/${props.assetType}/continue-watching` : '';
 
   return (
-    <Collection title={props.title} assetType={props.assetType} assets={data.assets} showAllCardUrl={showAllCardUrl} />
+    <Collection
+      title={props.title}
+      assetType={props.assetType}
+      assets={data?.assets ?? []}
+      showAllCardUrl={showAllCardUrl}
+      loading={loading}
+    />
   );
 };
 
@@ -82,9 +100,9 @@ export const CollectionSearch: FC<CollectionSearchProps> = (props) => {
     search: props.searchTerm,
   });
 
-  if (error || loading || !data?.assets) {
+  if (error || (!data?.assets && !loading)) {
     return null;
   }
 
-  return <Collection title={props.title} assetType={props.assetType} assets={data.assets} />;
+  return <Collection title={props.title} assetType={props.assetType} assets={data?.assets ?? []} loading={loading} />;
 };

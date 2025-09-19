@@ -12,6 +12,7 @@ type CollectionProps = BaseCollectionProps & {
   assetType: AssetType;
   assets: Movie[] | Series[] | Season[];
   showAllCardUrl?: string;
+  loading: boolean;
 };
 
 export const Collection: FC<CollectionProps> = (props) => {
@@ -19,11 +20,17 @@ export const Collection: FC<CollectionProps> = (props) => {
   const isSeries = (asset: Movie | Series | Season): asset is Series => props.assetType === 'series';
   const isSeason = (asset: Movie | Series | Season): asset is Season => 'seasonNumber' in asset;
 
-  if (!props.assets.length) {
-    return null;
+  let assets = props.assets;
+
+  if (props.loading) {
+    assets = [{ id: 0 }, { id: 1 }, { id: 2 }];
   }
 
-  const assets = props.assets.map((asset) => {
+  const assetcards = assets.map((asset) => {
+    if (props.loading) {
+      return <AssetCard key={asset.id} asset={asset as Movie} type={'movies'} disableLink />;
+    }
+
     if (isMovie(asset)) {
       return <AssetCard key={asset.id} asset={asset} type={'movies'} />;
     }
@@ -41,8 +48,8 @@ export const Collection: FC<CollectionProps> = (props) => {
     <div className="collection">
       {props.title && <h2 className="collection__title">{props.title}</h2>}
       <ul className="collection__assets">
-        {assets}
-        {props.showAllCardUrl && (
+        {assetcards}
+        {props.showAllCardUrl && !props.loading && (
           <Link to={props.showAllCardUrl}>
             <PosterImage icon={<HiOutlineArrowSmallRight />} direction="portrait" />
           </Link>

@@ -4,7 +4,7 @@ import React from 'react';
 
 type PosterImageProps =
   | {
-      src: string;
+      src: string | undefined;
       direction: 'portrait' | 'landscape';
       alt?: string;
     }
