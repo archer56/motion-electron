@@ -37,9 +37,9 @@ If this is the first time running you will need to create the binaries for VLC.
 
 This is done by running: 
 ```sh 
-yarn build-vlc:windows
+yarn build:vlc:windows
 // or
-yarn build-vlc:mac
+yarn build:vlc:mac
 ```
 If vlc has not been installed in an expected location, you made need to update binding.gyp with the correct location.
 

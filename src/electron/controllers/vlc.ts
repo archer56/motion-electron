@@ -3,7 +3,7 @@ import { ipcMain } from 'electron';
 import Vlc from '../utils/vlc';
 import type { CreateWindow } from '../utils/create-window';
 import { sessionStorage } from '../utils/session-storage';
-import type { OpenOptions } from '../../types/connections/vlc';
+import type { OpenOptions, AudioSubtitleTrack } from '../../types/connections/vlc';
 import { motion } from '../../shared/motion';
 import { DownloadManager } from './download/download-manager';
 
@@ -73,6 +73,42 @@ export const vlc = (window: BrowserWindow, createWindow: CreateWindow) => {
       event.sender.send('vlc-playback-state-reply', playbackState);
     } catch {
       event.sender.send('vlc-playback-state-reply', {});
+    }
+  });
+
+  ipcMain.on('vlc-get-subtitles', async (event) => {
+    try {
+      const subtitles = await Vlc.getSubtitleTracks();
+      event.sender.send('vlc-get-subtitles-reply', subtitles);
+    } catch {
+      event.sender.send('vlc-get-subtitles-reply', {});
+    }
+  });
+
+  ipcMain.on('vlc-set-subtitle', async (event, id: AudioSubtitleTrack['id']) => {
+    try {
+      await Vlc.setSubtitleTrack(id);
+      event.sender.send('vlc-set-subtitle-reply');
+    } catch {
+      event.sender.send('vlc-set-subtitle-reply');
+    }
+  });
+
+  ipcMain.on('vlc-get-audio', async (event) => {
+    try {
+      const audioTracks = await Vlc.getAudioTracks();
+      event.sender.send('vlc-get-audio-reply', audioTracks);
+    } catch {
+      event.sender.send('vlc-get-audio-reply', {});
+    }
+  });
+
+  ipcMain.on('vlc-set-audio', async (event, id: AudioSubtitleTrack['id']) => {
+    try {
+      await Vlc.setAudioTrack(id);
+      event.sender.send('vlc-set-audio-reply');
+    } catch {
+      event.sender.send('vlc-set-audio-reply');
     }
   });
 };

@@ -22,3 +22,9 @@ export type PlaybackState =
   | 'stopped'
   | 'ended'
   | 'error';
+
+export type AudioSubtitleTrack = {
+  id: number;
+  name: string;
+  active: boolean;
+};

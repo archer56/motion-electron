@@ -9,6 +9,8 @@ import { PlayPauseButton } from './component/play-pause-button';
 import classNames from 'classnames';
 import { useFetchAsset } from '../../hooks/use-fetch-motion';
 import { LoadingSpinner } from '../../components/loading-spinner/loading-spinner';
+import { SubtitleAudioButton } from './component/subtitle-audio-button';
+import { SubtitleAudioMenu } from './component/subtitle-audio-menu';
 
 export const VideoPage: FC = () => {
   const params = useParams();
@@ -23,6 +25,7 @@ export const VideoPage: FC = () => {
     total: 0,
   });
   const [overlayHidden, setOverlayHidden] = useState<boolean>(true);
+  const [showSubtitleAudioMenu, setShowSubtitleAudioMenu] = useState<boolean>(false);
   const [initialSeekComplete, setInitialSeekComplete] = useState<boolean>(false);
 
   if (!params.assetType || !params.id) {
@@ -53,6 +56,10 @@ export const VideoPage: FC = () => {
     }
 
     overlayTimeoutRef.current = setTimeout(() => {
+      if (showSubtitleAudioMenu) {
+        return;
+      }
+
       setOverlayHidden(() => true);
     }, 2000);
   };
@@ -161,7 +168,7 @@ export const VideoPage: FC = () => {
         clearTimeout(overlayTimeoutRef.current);
       }
     }
-  }, [playbackStatus]);
+  }, [playbackStatus, showSubtitleAudioMenu]);
 
   const handleClose = () => {
     window.vlc.close();
@@ -188,6 +195,10 @@ export const VideoPage: FC = () => {
     }
   };
 
+  const onSubtitleAudioClick = () => {
+    setShowSubtitleAudioMenu((prev) => !prev);
+  };
+
   const isLoading = playbackStatus === 'opening' || playbackStatus === 'buffering' || playbackStatus === 'idle';
 
   const videoPlayerClass = classNames('video-player', {
@@ -203,10 +214,12 @@ export const VideoPage: FC = () => {
       </div>
       <div className="video-player__content">
         <h1 className="video-player__title">{asset?.data?.asset?.title}</h1>
+        {showSubtitleAudioMenu && <SubtitleAudioMenu />}
       </div>
       <div className="video-player__footer">
         <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
           <PlayPauseButton isPaused={playbackStatus === 'paused'} onPauseUpdate={onPauseUpdate} />
+          <SubtitleAudioButton onClick={onSubtitleAudioClick} />
         </ProgressBar>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import type { TimeState } from '../../../types/connections/vlc';
+import type { AudioSubtitleTrack, TimeState } from '../../../types/connections/vlc';
 
 type PlaybackState = 'idle' | 'opening' | 'buffering' | 'playing' | 'paused' | 'stopped' | 'ended' | 'error' | 'none';
 
@@ -51,4 +51,26 @@ export type VlcAddon = {
    * @returns An string detailing the current playback state
    */
   getPlaybackState: () => Promise<PlaybackState>;
+
+  /**
+   * Gets the subtitle tracks
+   * @returns An array of subtitle tracks
+   */
+  getSubtitleTracks: () => Promise<AudioSubtitleTrack[]>;
+
+  /**
+   * Sets a subtitle track
+   */
+  setSubtitleTrack: (id: AudioSubtitleTrack['id']) => Promise<AudioSubtitleTrack[]>;
+
+  /**
+   * Gets the audio tracks
+   * @returns An array of audio tracks
+   */
+  getAudioTracks: () => Promise<AudioSubtitleTrack[]>;
+
+  /**
+   * Sets a audio track
+   */
+  setAudioTrack: (id: AudioSubtitleTrack['id']) => Promise<AudioSubtitleTrack[]>;
 };

@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import type { OpenOptions, PlaybackState, TimeState } from '../../types/connections/vlc';
+import type { OpenOptions, PlaybackState, AudioSubtitleTrack, TimeState } from '../../types/connections/vlc';
 
 type ExposedVlc = {
   open: (params: OpenOptions) => Promise<void>;
@@ -9,6 +9,10 @@ type ExposedVlc = {
   seek: (seekMs: number) => Promise<void>;
   timeState: () => Promise<TimeState>;
   playbackState: () => Promise<PlaybackState>;
+  getSubtitleTracks: () => Promise<AudioSubtitleTrack[]>;
+  setSubtitleTrack: (id: AudioSubtitleTrack['id']) => Promise<void>;
+  getAudioTracks: () => Promise<AudioSubtitleTrack[]>;
+  setAudioTrack: (id: AudioSubtitleTrack['id']) => Promise<void>;
 };
 
 declare global {
@@ -39,6 +43,10 @@ const exposedVlc: ExposedVlc = {
   seek: createConnection('seek'),
   timeState: createConnection('timestate'),
   playbackState: createConnection('playback-state'),
+  getSubtitleTracks: createConnection('get-subtitles'),
+  setSubtitleTrack: createConnection('set-subtitle'),
+  getAudioTracks: createConnection('get-audio'),
+  setAudioTrack: createConnection('set-audio'),
 };
 
 export const vlc = () => {

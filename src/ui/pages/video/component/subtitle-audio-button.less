@@ -1,0 +1,31 @@
+.subtitle-audio-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70px;
+  width: 70px;
+  border: none;
+  border-radius: 100%;
+  background: @color-grey8;
+  color: @color-grey3;
+  cursor: pointer;
+
+  .media(@tablet, {
+    position: inherit;
+    transform: none;
+    height: 35px;
+    width: 35px;
+  });
+}
+
+.subtitle-audio-button__icon {
+  font-size: 25px;
+
+  .media(@tablet, {
+    font-size: 15px;
+  })
+}

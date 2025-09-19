@@ -1,6 +1,9 @@
 @import './component/progress-bar.less';
 @import './component/timestamp.less';
 @import './component/play-pause-button.less';
+@import './component/subtitle-audio-button.less';
+@import './component/subtitle-audio-menu.less';
+@import './component/subtitle-audio-menu-list.less';
 
 .video-player {
   display: grid;
@@ -13,6 +16,7 @@
 }
 
 .video-player__content {
+  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
