@@ -2,12 +2,21 @@ import type { FC } from 'react';
 import React, { useEffect, useState } from 'react';
 import { SubtitleAudioMenuList } from './subtitle-audio-menu-list';
 import type { AudioSubtitleTrack } from '../../../../types/connections/vlc';
+import classNames from 'classnames';
 
-export const SubtitleAudioMenu: FC = () => {
+type SubtitleAudioMenuProps = {
+  visible: boolean;
+};
+
+export const SubtitleAudioMenu: FC<SubtitleAudioMenuProps> = (props) => {
   const [subtitleList, setSubtitleList] = useState<AudioSubtitleTrack[]>([]);
   const [audioList, setAudioList] = useState<AudioSubtitleTrack[]>([]);
 
   useEffect(() => {
+    if (!props.visible) {
+      return;
+    }
+
     window.vlc.getSubtitleTracks().then((list) => {
       setSubtitleList(() => list);
     });
@@ -15,7 +24,7 @@ export const SubtitleAudioMenu: FC = () => {
     window.vlc.getAudioTracks().then((list) => {
       setAudioList(() => list);
     });
-  }, []);
+  }, [props.visible]);
 
   const handleSubtitleClick = (id: number) => {
     setSubtitleList((prev) =>
@@ -39,8 +48,12 @@ export const SubtitleAudioMenu: FC = () => {
     window.vlc.setAudioTrack(id);
   };
 
+  const className = classNames('subtitle-audio-menu', {
+    'subtitle-audio-menu--hidden': !props.visible,
+  });
+
   return (
-    <div className="subtitle-audio-menu">
+    <div className={className}>
       <SubtitleAudioMenuList title="Subtitles" list={subtitleList} onClick={handleSubtitleClick} />
       <SubtitleAudioMenuList title="Audio" list={audioList} onClick={handleAudioClick} />
     </div>

@@ -214,7 +214,7 @@ export const VideoPage: FC = () => {
       </div>
       <div className="video-player__content">
         <h1 className="video-player__title">{asset?.data?.asset?.title}</h1>
-        {showSubtitleAudioMenu && <SubtitleAudioMenu />}
+        <SubtitleAudioMenu visible={showSubtitleAudioMenu} />
       </div>
       <div className="video-player__footer">
         <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
