@@ -295,6 +295,118 @@ Napi::Value GetPlaybackState(const Napi::CallbackInfo& info) {
   return Napi::String::New(env, stateStr);
 }
 
+Napi::Value GetSubtitleTracks(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return env.Null();
+  }
+
+  // Get current active subtitle track id
+  int currentSpu = libvlc_video_get_spu(g_vlcPlayer);
+
+  // Get the list of available subtitle tracks
+  libvlc_track_description_t* desc = libvlc_video_get_spu_description(g_vlcPlayer);
+  if (!desc) {
+    return Napi::Array::New(env); // return empty array if none
+  }
+
+  Napi::Array result = Napi::Array::New(env);
+  uint32_t index = 0;
+
+  for (libvlc_track_description_t* item = desc; item != nullptr; item = item->p_next) {
+    Napi::Object sub = Napi::Object::New(env);
+    sub.Set("id", Napi::Number::New(env, item->i_id));
+    sub.Set("name", Napi::String::New(env, item->psz_name ? item->psz_name : ""));
+    sub.Set("active", Napi::Boolean::New(env, item->i_id == currentSpu));
+
+    result.Set(index++, sub);
+  }
+
+  // Release memory allocated by VLC
+  libvlc_track_description_list_release(desc);
+
+  return result;
+}
+
+Napi::Value SetSubtitleTrack(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return env.Null();
+  }
+
+  // Make sure the first argument is a number
+  if (info.Length() < 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Subtitle track ID expected").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  int trackId = info[0].As<Napi::Number>().Int32Value();
+
+  // Set the subtitle track (SPU)
+  int result = libvlc_video_set_spu(g_vlcPlayer, trackId);
+
+  // libVLC returns 0 on success, -1 on failure
+  return Napi::Boolean::New(env, result == 0);
+}
+
+Napi::Value GetAudioTracks(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return env.Null();
+  }
+
+  // Get the current active audio track id
+  int currentTrack = libvlc_audio_get_track(g_vlcPlayer);
+
+  // Get the list of available audio tracks
+  libvlc_track_description_t* desc = libvlc_audio_get_track_description(g_vlcPlayer);
+  if (!desc) {
+    return Napi::Array::New(env); // empty array if none
+  }
+
+  Napi::Array result = Napi::Array::New(env);
+  uint32_t index = 0;
+
+  for (libvlc_track_description_t* item = desc; item != nullptr; item = item->p_next) {
+    Napi::Object track = Napi::Object::New(env);
+    track.Set("id", Napi::Number::New(env, item->i_id));
+    track.Set("name", Napi::String::New(env, item->psz_name ? item->psz_name : ""));
+    track.Set("active", Napi::Boolean::New(env, item->i_id == currentTrack));
+
+    result.Set(index++, track);
+  }
+
+  // Release the memory allocated by VLC
+  libvlc_track_description_list_release(desc);
+
+  return result;
+}
+
+Napi::Value SetAudioTrack(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+
+  if (!g_vlcPlayer) {
+    return env.Null();
+  }
+
+  // Make sure the first argument is a number
+  if (info.Length() < 1 || !info[0].IsNumber()) {
+    Napi::TypeError::New(env, "Audio track ID expected").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  int trackId = info[0].As<Napi::Number>().Int32Value();
+
+  // Set the audio track
+  int result = libvlc_audio_set_track(g_vlcPlayer, trackId);
+
+  // libVLC returns 0 on success, -1 on failure
+  return Napi::Boolean::New(env, result == 0);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("initialise", Napi::Function::New(env, Initialise));
     exports.Set("uninitialise", Napi::Function::New(env, Uninitialise));
@@ -306,6 +418,10 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("seekTo", Napi::Function::New(env, SeekTo));
     exports.Set("getTimeState", Napi::Function::New(env, GetTimeState));
     exports.Set("getPlaybackState", Napi::Function::New(env, GetPlaybackState));
+    exports.Set("getSubtitleTracks", Napi::Function::New(env, GetSubtitleTracks));
+    exports.Set("setSubtitleTrack", Napi::Function::New(env, SetSubtitleTrack));
+    exports.Set("getAudioTracks", Napi::Function::New(env, GetAudioTracks));
+    exports.Set("setAudioTrack", Napi::Function::New(env, SetAudioTrack));
     return exports;
 }
 
