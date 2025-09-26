@@ -9,13 +9,15 @@ type EpisodeProps = {
 };
 
 export const EpisodeItem: FC<EpisodeProps> = (props) => {
-  const { id, posterSrc, title, description } = props.asset;
+  const { id, posterSrc, title, description, episodeNumber } = props.asset;
 
   return (
     <div className="episode-item">
       <PlayVideoButton id={id} assetType="series" posterSrc={posterSrc} />
       <div className="episode-item__meta">
-        <p className="episode-item__title">{title}</p>
+        <p className="episode-item__title">
+          E{episodeNumber} - {title}
+        </p>
         <p className="episode-item__description">{description}</p>
       </div>
       <div className="episode-item__download-container">

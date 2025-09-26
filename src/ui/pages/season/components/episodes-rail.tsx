@@ -14,5 +14,5 @@ export const EpisodesRail: FC<EpisodesRailProps> = (props) => {
 
   const episodes = props.episodes.map((episode) => <EpisodeItem asset={episode} key={episode.id} />);
 
-  return <ul>{episodes}</ul>;
+  return <ul className="episodes-rail">{episodes}</ul>;
 };
