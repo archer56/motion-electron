@@ -11,6 +11,7 @@ import { useFetchAsset } from '../../hooks/use-fetch-motion';
 import { LoadingSpinner } from '../../components/loading-spinner/loading-spinner';
 import { SubtitleAudioButton } from './component/subtitle-audio-button';
 import { SubtitleAudioMenu } from './component/subtitle-audio-menu';
+import { SeekButton } from './component/seek-button';
 
 export const VideoPage: FC = () => {
   const params = useParams();
@@ -187,6 +188,24 @@ export const VideoPage: FC = () => {
     window.vlc.seek(newMs);
   };
 
+  const onSeekForward = async () => {
+    const newMs = timeState.current + 10000;
+    if (newMs >= timeState.total) {
+      return window.vlc.seek(timeState.total - 1000);
+    }
+
+    window.vlc.seek(newMs);
+  };
+
+  const onSeekBackward = async () => {
+    const newMs = timeState.current - 10000;
+    if (newMs <= 0) {
+      return window.vlc.seek(0);
+    }
+
+    window.vlc.seek(newMs);
+  };
+
   const onPauseUpdate = (isPaused: boolean) => {
     if (isPaused) {
       window.vlc.pause();
@@ -219,6 +238,8 @@ export const VideoPage: FC = () => {
       <div className="video-player__footer">
         <ProgressBar progress={timeState.current} length={timeState.total} onProgressChange={onProgressChange}>
           <PlayPauseButton isPaused={playbackStatus === 'paused'} onPauseUpdate={onPauseUpdate} />
+          <SeekButton onClick={onSeekBackward} direction="backward" />
+          <SeekButton onClick={onSeekForward} direction="forward" />
           <SubtitleAudioButton onClick={onSubtitleAudioClick} />
         </ProgressBar>
       </div>
