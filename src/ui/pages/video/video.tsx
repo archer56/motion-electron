@@ -78,6 +78,10 @@ export const VideoPage: FC = () => {
       onPauseUpdate(isPaused ? false : true);
     } else if (e.code === 'Escape') {
       handleClose();
+    } else if (e.code === 'ArrowRight') {
+      onSeekForward();
+    } else if (e.code === 'ArrowLeft') {
+      onSeekBackward();
     }
   };
 
@@ -130,7 +134,7 @@ export const VideoPage: FC = () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [overlayHidden, playbackStatus]);
+  }, [overlayHidden, playbackStatus, timeState]);
 
   const updateProgress = async () => {
     if (playbackStatus !== 'playing') {
